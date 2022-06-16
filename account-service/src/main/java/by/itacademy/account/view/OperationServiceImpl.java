@@ -7,7 +7,6 @@ import by.itacademy.account.dao.entity.OperationEntity;
 import by.itacademy.account.exception.RecordNotFoundException;
 import by.itacademy.account.model.Operation;
 import by.itacademy.account.model.OperationCriteria;
-import by.itacademy.account.model.SortOrder;
 import by.itacademy.account.view.api.AccountService;
 import by.itacademy.account.view.api.OperationService;
 import by.itacademy.account.view.api.UserService;
@@ -18,7 +17,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -64,7 +62,7 @@ public class OperationServiceImpl implements OperationService {
         checkAuthorization(accountId);
         String username = userService.getUserDetails().getUsername();
         Sort sort = Sort.by("date");
-        if (criteria.getSort().equals(SortOrder.ASC)) {
+        if (criteria.getSort().equals(Sort.Direction.ASC)) {
             sort.ascending();
         } else {
             sort.descending();

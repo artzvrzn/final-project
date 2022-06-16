@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.domain.Sort;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -19,5 +20,5 @@ public class OperationCriteria {
     private LocalDate to;
     @Exist(Exist.Classifier.CATEGORY)
     private List<UUID> category;
-    private SortOrder sort = SortOrder.DESC;
+    private Sort.Direction sort = Sort.Direction.DESC;
 }

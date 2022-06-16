@@ -2,13 +2,13 @@ CREATE USER "account-service_user" WITH PASSWORD '111';
 CREATE DATABASE "account-service" WITH OWNER = "account-service_user";
 \c "account-service"
 
-DROP TABLE IF EXISTS app.accounts;
-
 SET client_encoding = 'UTF8';
 
 CREATE SCHEMA app;
 
 ALTER SCHEMA app OWNER TO "account-service_user";
+
+DROP TABLE IF EXISTS app.accounts;
 
 CREATE TABLE IF NOT EXISTS app.accounts
 (

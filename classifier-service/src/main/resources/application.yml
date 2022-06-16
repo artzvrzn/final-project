@@ -1,0 +1,13 @@
+server:
+  port: 8081
+spring:
+  jpa:
+    database: POSTGRESQL
+    show-sql: true
+    hibernate:
+      ddl-auto: create
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/classifier-service
+    username: postgres
+    password: 111

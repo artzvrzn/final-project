@@ -22,5 +22,4 @@ public abstract class BaseDto {
     private LocalDateTime created;
     @JsonProperty(value = "dt_updated")
     private LocalDateTime updated;
-
 }
