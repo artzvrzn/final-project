@@ -67,8 +67,7 @@ public class OperationController {
         operationService.update(accountId, operationId, updated, operation);
     }
 
-    @DeleteMapping(value = {"/{uuid_operation}/dt_update/{dt_update}", "/{uuid_operation}/dt_update/{dt_update}/"},
-                   consumes = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping(value = {"/{uuid_operation}/dt_update/{dt_update}", "/{uuid_operation}/dt_update/{dt_update}/"})
     @ResponseStatus(HttpStatus.OK)
     public void delete(@PathVariable("uuid") UUID accountId,
                        @PathVariable("uuid_operation") UUID operationId,

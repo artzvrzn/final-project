@@ -7,6 +7,7 @@ import by.itacademy.account.model.error.Violation;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -24,6 +25,7 @@ public class ExceptionAdvice {
 
     private final String STRUCTURED_ERROR = "structured_error";
     private final String SINGLE_ERROR = "error";
+    private final String INVALID_PARAMETERS = "request contains invalid parameters";
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -41,7 +43,7 @@ public class ExceptionAdvice {
     @ResponseBody
     public SingleResponseError validationHandler(BindException exception) {
         log.error("{}: {}", exception.getClass().getSimpleName(), exception.getMessage());
-        return new SingleResponseError(SINGLE_ERROR, "request contains invalid parameters");
+        return new SingleResponseError(SINGLE_ERROR, INVALID_PARAMETERS);
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
@@ -59,24 +61,35 @@ public class ExceptionAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
     public SingleResponseError validationHandler(HttpMessageNotReadableException exception) {
-        log.error("{}: {}", exception.getClass().getSimpleName(), exception.getMessage());
-        return new SingleResponseError(SINGLE_ERROR, "request contains invalid parameters");
+        return commonHandler(exception, INVALID_PARAMETERS);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
     public SingleResponseError illegalArgument(IllegalArgumentException exception) {
-        log.error("{}: {}", exception.getClass().getSimpleName(), exception.getMessage());
-        return new SingleResponseError(SINGLE_ERROR, exception.getMessage());
+        return commonHandler(exception);
     }
 
     @ExceptionHandler(RecordNotFoundException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
-    public SingleResponseError recordNotFound(RecordNotFoundException exception) {
+    public SingleResponseError recordNotFoundHandler(RecordNotFoundException exception) {
+        return commonHandler(exception);
+    }
+
+    @ExceptionHandler(SecurityException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ResponseBody
+    public void unauthorizedHandler(SecurityException exception) {
         log.error("{}: {}", exception.getClass().getSimpleName(), exception.getMessage());
-        return new SingleResponseError(SINGLE_ERROR, exception.getMessage());
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ResponseBody
+    public void forbiddenHandler(AccessDeniedException exception) {
+        log.error("{}: {}", exception.getClass().getSimpleName(), exception.getMessage());
     }
 
     @ExceptionHandler(Exception.class)
@@ -85,5 +98,14 @@ public class ExceptionAdvice {
     public SingleResponseError illegalState(Exception exception) {
         log.error("{}: {}", exception.getClass().getSimpleName(), exception.getMessage());
         return new SingleResponseError(SINGLE_ERROR, "unable to process the request");
+    }
+
+    private SingleResponseError commonHandler(RuntimeException exception, String message) {
+        log.error("{}: {}", exception.getClass().getSimpleName(), exception.getMessage());
+        return new SingleResponseError(SINGLE_ERROR, message);
+    }
+
+    private SingleResponseError commonHandler(RuntimeException exception) {
+        return commonHandler(exception, exception.getMessage());
     }
 }

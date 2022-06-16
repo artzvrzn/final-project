@@ -3,6 +3,9 @@ package by.itacademy.account.model;
 import by.itacademy.account.validation.anno.Exist;
 import by.itacademy.account.validation.anno.ValidType;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -15,13 +18,15 @@ import java.util.UUID;
 @Getter
 @Setter
 @NoArgsConstructor
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+@JsonPropertyOrder({"uuid", "dt_created", "dt_updated", "title", "description", "balance", "type", "currency"})
 public class Account extends BaseDto {
 
     @NotBlank(message = "not passed")
     private String title;
     @NotBlank(message = "not passed")
     private String description;
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    @JsonProperty(value = "balance", access = JsonProperty.Access.READ_ONLY)
     private BigDecimal value;
     @NotNull(message = "not passed")
     @ValidType

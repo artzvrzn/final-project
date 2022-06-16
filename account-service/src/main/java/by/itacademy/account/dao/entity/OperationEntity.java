@@ -26,7 +26,7 @@ public class OperationEntity extends BaseEntity {
     private UUID category;
     @Column(nullable = false)
     private BigDecimal value;
-    @Column(nullable = false)
+    @Column(nullable = false, updatable = false)
     private UUID currency;
 
 }

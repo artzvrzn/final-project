@@ -14,10 +14,15 @@ import java.util.UUID;
 @Table(name = "accounts", schema = "app")
 public class AccountEntity extends BaseEntity {
 
+    @Column(nullable = false)
     private String title;
+    @Column(nullable = false)
     private String description;
     @OneToOne(mappedBy = "account", cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
     private BalanceEntity balance;
+    @Column(nullable = false)
     private AccountType type;
+    @Column(nullable = false, updatable = false)
+    private String username;
 }

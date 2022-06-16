@@ -13,5 +13,8 @@ import java.util.UUID;
 public interface AccountRepository extends JpaRepository<AccountEntity, UUID> {
 
     @EntityGraph(attributePaths = {"balance"}, type = EntityGraph.EntityGraphType.FETCH)
+    Page<AccountEntity> findAllByUsername(String username, Pageable pageable);
+
+    @EntityGraph(attributePaths = {"balance"}, type = EntityGraph.EntityGraphType.FETCH)
     Page<AccountEntity> findAll(Pageable pageable);
 }

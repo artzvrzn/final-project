@@ -1,15 +1,13 @@
-package by.itacademy.account.controller.utils;
+package by.itacademy.user.controller.utils;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.util.BeanUtil;
 import io.jsonwebtoken.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -19,7 +17,13 @@ public class JwtTokenUtil {
     private static final String jwtIssuer = "ITAcademy";
 
     public static String generateAccessToken(UserDetails user) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("authorities", user.getAuthorities()
+                .stream()
+                .map(GrantedAuthority::getAuthority)
+                .toArray());
         return Jwts.builder()
+                .setClaims(claims)
                 .setSubject(user.getUsername())
                 .setIssuer(jwtIssuer)
                 .setIssuedAt(new Date())
@@ -37,18 +41,6 @@ public class JwtTokenUtil {
         return claims.getSubject();
     }
 
-    public static Collection<? extends GrantedAuthority> getAuthorities(String token) {
-        try {
-            Claims claims = Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody();
-            return Arrays.stream(claims.get("authorities")
-                            .toString().replaceAll("[\\[\\]]", "").split(","))
-                    .map(SimpleGrantedAuthority::new)
-                    .collect(Collectors.toList());
-        } catch (Exception exc) {
-            return Collections.emptyList();
-        }
-    }
-
     public static Date getExpirationDate(String token) {
         Claims claims = Jwts.parser()
                 .setSigningKey(jwtSecret)
@@ -63,7 +55,7 @@ public class JwtTokenUtil {
             Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token);
             return true;
         } catch (SignatureException ex) {
-            //logger.error("Invalid JWT signature - {}", ex.getMessage());
+            //logger.error("I   nvalid JWT signature - {}", ex.getMessage());
         } catch (MalformedJwtException ex) {
             //logger.error("Invalid JWT token - {}", ex.getMessage());
         } catch (ExpiredJwtException ex) {
