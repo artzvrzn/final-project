@@ -22,8 +22,8 @@ public class ClassifierValidator implements ConstraintValidator<Exist, UUID> {
     @Value("${urls.classifier-service}")
     private String classifierUrl;
 
-    public ClassifierValidator(RestTemplateBuilder builder) {
-        this.restTemplate = builder.build();
+    public ClassifierValidator(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
     }
 
     @Override
@@ -42,7 +42,7 @@ public class ClassifierValidator implements ConstraintValidator<Exist, UUID> {
             log.info(String.format("Knocking on %s", url));
             responseEntity = restTemplate.exchange(url, HttpMethod.GET, null, Void.class);
         } catch (HttpClientErrorException exc) {
-            log.error(exc.getMessage());
+            log.error(exc.getMessage(), exc.getCause());
             return false;
         }
         return responseEntity.getStatusCode().equals(HttpStatus.OK);

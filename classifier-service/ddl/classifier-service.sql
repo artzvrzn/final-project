@@ -4,11 +4,13 @@ CREATE DATABASE "classifier-service" WITH OWNER = "classifier-service_user";
 
 SET client_encoding = 'UTF8';
 
+DROP TABLE IF EXISTS app.currency;
+
+DROP SCHEMA IF EXISTS app;
+
 CREATE SCHEMA app;
 
 ALTER SCHEMA app OWNER TO "classifier-service_user";
-
-DROP TABLE IF EXISTS app.currency;
 
 CREATE TABLE IF NOT EXISTS app.currency
 (

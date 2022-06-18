@@ -1,6 +1,6 @@
-package by.itacademy.account.controller.filter;
+package by.it.academy.account.scheduler.controller.filter;
 
-import by.itacademy.account.utils.JwtTokenUtil;
+import by.it.academy.account.scheduler.utils.JwtTokenUtil;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -43,42 +43,7 @@ public class JwtFilter extends OncePerRequestFilter {
         }
 
         // Get user identity and set it on the spring security context
-        UserDetails userDetails = new UserDetails() {
-            @Override
-            public Collection<? extends GrantedAuthority> getAuthorities() {
-                return JwtTokenUtil.getAuthorities(token);
-            }
-
-            @Override
-            public String getPassword() {
-                return null;
-            }
-
-            @Override
-            public String getUsername() {
-                return JwtTokenUtil.getUsername(token);
-            }
-
-            @Override
-            public boolean isAccountNonExpired() {
-                return false;
-            }
-
-            @Override
-            public boolean isAccountNonLocked() {
-                return false;
-            }
-
-            @Override
-            public boolean isCredentialsNonExpired() {
-                return false;
-            }
-
-            @Override
-            public boolean isEnabled() {
-                return false;
-            }
-        };
+        UserDetails userDetails = new UserDetailsImpl(token);
 
         UsernamePasswordAuthenticationToken
                 authentication = new UsernamePasswordAuthenticationToken(
@@ -93,5 +58,49 @@ public class JwtFilter extends OncePerRequestFilter {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         chain.doFilter(request, response);
+    }
+
+    private static class UserDetailsImpl implements UserDetails {
+
+        private final String token;
+
+        public UserDetailsImpl(String token) {
+            this.token = token;
+        }
+
+        @Override
+        public Collection<? extends GrantedAuthority> getAuthorities() {
+            return JwtTokenUtil.getAuthorities(token);
+        }
+
+        @Override
+        public String getPassword() {
+            return null;
+        }
+
+        @Override
+        public String getUsername() {
+            return JwtTokenUtil.getUsername(token);
+        }
+
+        @Override
+        public boolean isAccountNonExpired() {
+            return false;
+        }
+
+        @Override
+        public boolean isAccountNonLocked() {
+            return false;
+        }
+
+        @Override
+        public boolean isCredentialsNonExpired() {
+            return false;
+        }
+
+        @Override
+        public boolean isEnabled() {
+            return false;
+        }
     }
 }

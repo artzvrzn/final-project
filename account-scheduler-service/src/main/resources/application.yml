@@ -1,0 +1,24 @@
+server:
+  port: 8082
+urls:
+  account-service: http://localhost:8080/account
+  classifier-service: http://localhost:8081/classifier
+spring:
+  jpa:
+    database: POSTGRESQL
+    hibernate:
+      ddl-auto: none
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    jdbc-url: jdbc:postgresql://localhost:5432/account-scheduler-service
+    username: postgres
+    password: 111
+  quartz:
+    job-store-type: jdbc
+    overwrite-existing-jobs: true
+    jdbc:
+      initialize-schema: never
+      platform: postgres
+    properties:
+      org.quartz.jobStore.driverDelegateClass: "org.quartz.impl.jdbcjobstore.PostgreSQLDelegate"
+      org.quartz.jobStore.tablePrefix: "quartz.QRTZ_"

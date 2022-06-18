@@ -9,10 +9,7 @@ import by.itacademy.account.view.api.UserService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -62,7 +59,7 @@ public class AccountServiceImpl implements AccountService {
         } else {
             result = accountRepository.findAllByUsername(userDetails.getUsername(), pageable);
         }
-        return result.map(e -> conversionService.convert(e, Account.class));
+        return result != null ? result.map(e -> conversionService.convert(e, Account.class)) : null;
     }
 
     @Override

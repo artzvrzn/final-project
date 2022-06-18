@@ -26,8 +26,8 @@ public class ClassifierListValidator implements ConstraintValidator<Exist, List<
     @Value("${urls.classifier-service}")
     private String classifierUrl;
 
-    public ClassifierListValidator(RestTemplateBuilder builder) {
-        this.restTemplate = builder.build();
+    public ClassifierListValidator(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
     }
 
     @Override
