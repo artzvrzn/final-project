@@ -4,6 +4,8 @@ import by.it.academy.report.serializer.LocalDateTimeMillisDeserializer;
 import by.it.academy.report.serializer.LocalDateTimeMillisSerializer;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -15,20 +17,25 @@ import java.util.UUID;
 
 @ToString
 @JsonDeserialize(builder = Report.Builder.class)
+@JsonPropertyOrder({"uuid", "dt_created", "dt_updated", "status", "type", "description", "params"})
 public class Report {
 
     private Report() {}
 
+    @JsonProperty("uuid")
     private UUID id;
     @JsonSerialize(using = LocalDateTimeMillisSerializer.class)
     @JsonDeserialize(using = LocalDateTimeMillisDeserializer.class)
+    @JsonProperty("dt_created")
     private LocalDateTime created;
     @JsonSerialize(using = LocalDateTimeMillisSerializer.class)
     @JsonDeserialize(using = LocalDateTimeMillisDeserializer.class)
+    @JsonProperty("dt_updated")
     private LocalDateTime updated;
     private ReportStatus status;
     private ReportType type;
     private String description;
+    @JsonPropertyOrder(alphabetic = true)
     private Map<String, Object> params;
     @JsonIgnore
     private String filename;

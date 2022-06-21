@@ -6,7 +6,7 @@ public enum Messages {
     IS_EMPTY("is empty"),
     INVALID_FORMAT("invalid format");
 
-    private String text;
+    private final String text;
 
     Messages(String text) {
         this.text = text;

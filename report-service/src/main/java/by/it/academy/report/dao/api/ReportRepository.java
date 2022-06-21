@@ -17,6 +17,10 @@ import java.util.UUID;
 
 @Repository
 public interface ReportRepository extends JpaRepository<ReportEntity, UUID> {
+
+    @EntityGraph(attributePaths = {"fileProperty"}, type = EntityGraph.EntityGraphType.FETCH)
+    Page<ReportEntity> findAll(Pageable pageable);
+
     @EntityGraph(attributePaths = {"fileProperty"}, type = EntityGraph.EntityGraphType.FETCH)
     Page<ReportEntity> findAllByUsername(String username, Pageable pageable);
 

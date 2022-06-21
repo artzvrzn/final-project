@@ -3,6 +3,7 @@ CREATE DATABASE "report-service" WITH OWNER = "report-service_user";
 \c "report-service"
 
 DROP TABLE IF EXISTS app.reports CASCADE;
+DROP TABLE IF EXISTS app.report_properties CASCADE;
 
 DROP SCHEMA IF EXISTS app;
 
@@ -18,7 +19,6 @@ CREATE TABLE IF NOT EXISTS app.reports
     status integer NOT NULL,
     type integer NOT NULL,
     updated timestamp(3) without time zone NOT NULL,
-    user_details bytea NOT NULL,
 	username character varying(255) NOT NULL,
     CONSTRAINT pk_report PRIMARY KEY (id),
 	params character varying NOT NULL

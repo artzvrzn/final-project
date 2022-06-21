@@ -15,7 +15,7 @@ spring:
     username: report-service_user
     password: 111
 minio:
-  bucket.name: report-storage
-  access.key: Q3AM3UQ867SPQQA43P2F
-  access.secret: zuf+tfteSlswRu7BJ86wekitnifILbZam1KYY3TG
-  url: https://play.min.io
+  bucket.name: report
+  access.key: 9Z939G61IPEV0WFHWIW1
+  access.secret: krPc7XIcvXPCGnZpX1BtMnmWr4OaTzXqsH+50Jd6
+  url: http://localhost:93/

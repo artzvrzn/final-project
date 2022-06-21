@@ -6,18 +6,18 @@ import lombok.extern.log4j.Log4j2;
 @Log4j2
 public enum ReportType {
 
-    BALANCE, BY_DATE, BY_CATEGORY;
+    BALANCE("Отчет по балансу аккаунтов"),
+    BY_DATE("Отчет по операциям, осуществленным в разрезе дат"),
+    BY_CATEGORY("Отчет по операциям, совершенным в разрезе категорий");
 
-    @JsonCreator
-    public static ReportType valueOfOrNull(String name) {
-        if (name == null || name.isEmpty()) {
-            return null;
-        }
-        try {
-            return ReportType.valueOf(name.toUpperCase());
-        } catch (IllegalArgumentException exc) {
-            log.error(exc.getMessage());
-            return null;
-        }
+    private final String description;
+
+    ReportType(String description) {
+        this.description = description;
     }
+
+    public String getDescription() {
+        return description;
+    }
+
 }

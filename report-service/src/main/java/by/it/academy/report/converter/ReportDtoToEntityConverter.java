@@ -25,9 +25,7 @@ public class ReportDtoToEntityConverter implements Converter<Report, ReportEntit
         reportEntity.setType(dto.getType());
         reportEntity.setDescription(dto.getDescription());
         reportEntity.setParams(dto.getParams());
-        UserDetails userDetails = userService.getUserDetails();
-        reportEntity.setUsername(userDetails.getUsername());
-        reportEntity.setUserDetails(userDetails);
+        reportEntity.setUsername(userService.getUserDetails().getUsername());
         ReportFilePropertyEntity fileProperties = new ReportFilePropertyEntity();
         fileProperties.setReport(reportEntity);
         fileProperties.setFilename(dto.getFilename());

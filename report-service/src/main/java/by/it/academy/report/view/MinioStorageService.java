@@ -9,10 +9,14 @@ import io.minio.PutObjectArgs;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.util.concurrent.Future;
 
 @Log4j2
 @Service
@@ -24,15 +28,18 @@ public class MinioStorageService implements StorageService {
     private String bucketName;
 
     @Override
+    @Async("SecurityAwareTaskExecutor")
     public void upload(FileData file) {
         try (InputStream inputStream = new ByteArrayInputStream(file.getContent())) {
             log.info("Uploading {} to the storage", file.getFilename());
-        minioClient.putObject(PutObjectArgs.builder()
+        PutObjectArgs object = PutObjectArgs.builder()
                     .bucket(bucketName)
                     .object(file.getFilename())
                     .contentType(file.getMediaType().toString())
                     .stream(inputStream, file.getSize(), -1)
-                    .build());
+                    .build();
+        Thread.sleep(1000);
+        minioClient.putObject(object);
         log.info("Report {} has been uploaded into the storage", file.getFilename());
         } catch (Exception e) {
             log.info("Error occurred during uploading the file {}", file.getFilename());
@@ -41,9 +48,11 @@ public class MinioStorageService implements StorageService {
     }
 
     @Override
-    public FileData download(String filename) {
+    @Async("SecurityAwareTaskExecutor")
+    public Future<FileData> download(String filename) {
         try {
-            log.info("Downloading file {} from ste storage", filename);
+            Thread.sleep(5000);
+            log.info("Downloading file {} from the storage", filename);
             InputStream stream = minioClient.getObject(GetObjectArgs.builder()
                     .bucket(bucketName)
                     .object(filename)
@@ -54,9 +63,9 @@ public class MinioStorageService implements StorageService {
                     .build();
             stream.close();
             log.info("File {} has been downloaded from the storage", filename);
-            return file;
+            return new AsyncResult<>(file);
         } catch (Exception e) {
-            log.info("Error occurred during downloading the file {}", filename, e.getCause());
+            log.error("Error occurred during downloading the file {}", filename, e.getCause());
             return null;
         }
     }

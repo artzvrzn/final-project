@@ -6,6 +6,7 @@ import by.it.academy.report.dao.entity.ReportEntity;
 import by.it.academy.report.exception.RecordNotFoundException;
 import by.it.academy.report.exception.ValidationException;
 import by.it.academy.report.model.*;
+import by.it.academy.report.utils.MapParser;
 import by.it.academy.report.validation.validator.ParamsValidatorFactory;
 import by.it.academy.report.view.api.StorageService;
 import by.it.academy.report.view.api.ReportExecutor;
@@ -24,12 +25,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.swing.text.html.Option;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import java.util.stream.Collectors;
 
 @Log4j2
 @Service
@@ -48,6 +50,8 @@ public class ReportServiceImpl implements ReportService {
     private UserService userService;
     @Autowired
     private ReportExecutor reportExecutor;
+    @Autowired
+    private MapParser parser;
 
     @Override
     public void create(ReportType type, Map<String, Object> params) {
@@ -58,7 +62,7 @@ public class ReportServiceImpl implements ReportService {
         Report report = createReport(type, params);
         reportRepository.save(conversionService.convert(report, ReportEntity.class));
         log.info("Report {} has been requested for creation", report.getId());
-        reportExecutor.execute(report.getId());
+        reportExecutor.execute(report.getId(), report.getType(), report.getParams());
     }
 
     @Override
@@ -84,9 +88,18 @@ public class ReportServiceImpl implements ReportService {
 
     @Override
     public FileData getFile(UUID id) {
-        ReportEntity entity =  getOrThrow(id);
+        ReportEntity entity = getOrThrow(id);
+        if (!entity.getStatus().equals(ReportStatus.DONE)) {
+            throw new NoSuchElementException("Report file is not created");
+        }
         String filename = entity.getFileProperty().getFilename();
-        return storageService.download(filename);
+        Future<FileData> futureFile = storageService.download(filename);
+        try {
+            return futureFile.get();
+        } catch (InterruptedException | ExecutionException e) {
+            log.error("Error occurred during receiving result from storage service {}", filename, e.getCause());
+            return null;
+        }
     }
 
     @Override
@@ -112,7 +125,22 @@ public class ReportServiceImpl implements ReportService {
     }
 
     private String resolveDescription(ReportType type, Map<String, Object> params) {
-        return "description";
+        switch (type) {
+            case BALANCE:
+                List<UUID> accounts = parser.readList("accounts", params, UUID.class);
+                return type.getDescription() + ": " +
+                        accounts.stream().map(String::valueOf).collect(Collectors.joining(", "));
+            case BY_DATE:
+                LocalDate from = parser.readValue("from", params, LocalDate.class);
+                LocalDate to = parser.readValue("to", params, LocalDate.class);
+                return String.format("Отчет по операциям, осуществленным с %s по %s", from, to);
+            case BY_CATEGORY:
+                List<UUID> categories = parser.readList("categories", params, UUID.class);
+                return type.getDescription() + ": " +
+                        categories.stream().map(String::valueOf).collect(Collectors.joining(", "));
+            default:
+                return type.getDescription();
+        }
     }
 
     private ReportEntity getOrThrow(UUID id) {

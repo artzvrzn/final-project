@@ -33,8 +33,6 @@ public class ReportEntity {
     private Map<String, Object> params;
     @Column(nullable = false)
     private String username;
-    @Column(nullable = false)
-    private UserDetails userDetails;
     @OneToOne(mappedBy = "report", cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
     private ReportFilePropertyEntity fileProperty;

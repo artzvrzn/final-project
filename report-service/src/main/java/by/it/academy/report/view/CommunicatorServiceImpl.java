@@ -7,10 +7,12 @@ import by.it.academy.report.model.Currency;
 import by.it.academy.report.model.Operation;
 import by.it.academy.report.utils.JwtTokenUtil;
 import by.it.academy.report.view.api.CommunicatorService;
+import by.it.academy.report.view.api.UserService;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.ToString;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.data.domain.PageImpl;
@@ -45,6 +47,8 @@ public class CommunicatorServiceImpl implements CommunicatorService {
     private String classifierServiceUrl;
     @Value("${urls.account-service}")
     private String accountServiceUrl;
+    @Autowired
+    private UserService userService;
 
     public CommunicatorServiceImpl(RestTemplateBuilder restTemplateBuilder) {
         this.restTemplate = restTemplateBuilder.build();
@@ -142,12 +146,13 @@ public class CommunicatorServiceImpl implements CommunicatorService {
         return Long.toString(localDate.atStartOfDay(ZoneOffset.UTC).toInstant().toEpochMilli());
     }
 
-    private static String getServiceToken() {
-        UserDetails userDetails = User.builder()
-                .username("report-service")
-                .password("report-service")
-                .roles("ADMIN")
-                .build();
+    private String getServiceToken() {
+        UserDetails userDetails = userService.getUserDetails();
+//        UserDetails userDetails = User.builder()
+//                .username("report-service")
+//                .password("report-service")
+//                .roles("ADMIN")
+//                .build();
         return "Bearer " + JwtTokenUtil.generateAccessToken(userDetails);
     }
 
