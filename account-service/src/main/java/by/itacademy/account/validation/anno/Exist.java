@@ -1,7 +1,7 @@
 package by.itacademy.account.validation.anno;
 
-import by.itacademy.account.validation.ClassifierListValidator;
-import by.itacademy.account.validation.ClassifierValidator;
+import by.itacademy.account.validation.validator.ClassifierListValidator;
+import by.itacademy.account.validation.validator.ClassifierValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;

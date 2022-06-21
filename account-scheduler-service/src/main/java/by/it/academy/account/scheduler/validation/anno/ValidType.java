@@ -1,7 +1,7 @@
 package by.it.academy.account.scheduler.validation.anno;
 
 
-import by.it.academy.account.scheduler.validation.EnumValidator;
+import by.it.academy.account.scheduler.validation.validator.EnumValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;

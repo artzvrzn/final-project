@@ -1,6 +1,6 @@
 package by.itacademy.account.validation.anno;
 
-import by.itacademy.account.validation.EnumValidator;
+import by.itacademy.account.validation.validator.EnumValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;

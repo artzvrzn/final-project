@@ -1,0 +1,21 @@
+server:
+  port: 8083
+urls:
+  account-service: http://localhost:8080/account
+  classifier-service: http://localhost:8081/classifier
+spring:
+  jpa:
+    database: POSTGRESQL
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/report-service
+    username: report-service_user
+    password: 111
+minio:
+  bucket.name: report-storage
+  access.key: Q3AM3UQ867SPQQA43P2F
+  access.secret: zuf+tfteSlswRu7BJ86wekitnifILbZam1KYY3TG
+  url: https://play.min.io

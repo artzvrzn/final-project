@@ -17,6 +17,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -60,7 +62,6 @@ public class OperationServiceImpl implements OperationService {
     @Transactional(readOnly = true)
     public Page<Operation> get(UUID accountId, int page, int size, OperationCriteria criteria) {
         checkAuthorization(accountId);
-        String username = userService.getUserDetails().getUsername();
         Sort sort = Sort.by("date");
         if (criteria.getSort().equals(Sort.Direction.ASC)) {
             sort.ascending();
@@ -68,9 +69,18 @@ public class OperationServiceImpl implements OperationService {
             sort.descending();
         }
         Pageable pageable = PageRequest.of(page, size, sort);
-        return operationRepository
-                .findAll(OperationSpecifications.byIdAndUsernameAndCriteria(accountId, username, criteria), pageable)
-                .map(e -> conversionService.convert(e, Operation.class));
+        UserDetails userDetails = userService.getUserDetails();
+        Page<Operation> result;
+        if (userService.isAdmin(userDetails)) {
+            result = operationRepository.findAll(OperationSpecifications.byIdAndCriteria(accountId, criteria), pageable)
+                    .map(e -> conversionService.convert(e, Operation.class));
+        } else {
+            result = operationRepository
+                    .findAll(OperationSpecifications.byIdAndUsernameAndCriteria
+                            (accountId, userDetails.getUsername(), criteria), pageable)
+                    .map(e -> conversionService.convert(e, Operation.class));
+        }
+        return result;
     }
 
     @Override

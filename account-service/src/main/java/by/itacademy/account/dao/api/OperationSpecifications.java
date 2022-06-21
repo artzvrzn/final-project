@@ -14,8 +14,15 @@ public final class OperationSpecifications {
             (UUID accountId, String username, OperationCriteria criteria) {
         return Specification.where(accountIdEquals(accountId))
                 .and(usernameEquals(username))
-                .and(dateBefore(criteria.getFrom()))
-                .and(dateAfter(criteria.getTo()))
+                .and(dateAfter(criteria.getFrom()))
+                .and(dateBefore(criteria.getTo()))
+                .and(belongsToCategory(criteria.getCategory()));
+    }
+
+    public static Specification<OperationEntity> byIdAndCriteria (UUID accountId, OperationCriteria criteria) {
+        return Specification.where(accountIdEquals(accountId))
+                .and(dateAfter(criteria.getFrom()))
+                .and(dateBefore(criteria.getTo()))
                 .and(belongsToCategory(criteria.getCategory()));
     }
 

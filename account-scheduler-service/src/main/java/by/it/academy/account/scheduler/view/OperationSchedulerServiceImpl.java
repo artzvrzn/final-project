@@ -55,11 +55,14 @@ public class OperationSchedulerServiceImpl implements OperationSchedulerService 
         jobScheduler.schedule(scheduledOperation);
     }
 
+    ////
     @Override
     @Transactional(readOnly = true)
     public Page<ScheduledOperation> get(int page, int size) {
+        String username =userService.getUserDetails().getUsername();
         Pageable request = PageRequest.of(page, size, Sort.by("created").descending());
-        return repository.findAll(request).map(e -> conversionService.convert(e, ScheduledOperation.class));
+        return repository.findAllByUsername(
+                username, request).map(e -> conversionService.convert(e, ScheduledOperation.class));
     }
 
     @Override

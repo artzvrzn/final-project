@@ -1,9 +1,9 @@
 package by.it.academy.account.scheduler.controller.advice;
 
 import by.it.academy.account.scheduler.exception.RecordNotFoundException;
-import by.it.academy.account.scheduler.model.error.MultipleResponseError;
-import by.it.academy.account.scheduler.model.error.SingleResponseError;
-import by.it.academy.account.scheduler.model.error.Violation;
+import by.it.academy.account.scheduler.controller.advice.error.MultipleResponseError;
+import by.it.academy.account.scheduler.controller.advice.error.SingleResponseError;
+import by.it.academy.account.scheduler.controller.advice.error.Violation;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -23,17 +23,6 @@ public class OperationController {
     @Autowired
     private OperationService operationService;
 
-//    @GetMapping(value = {"", "/"}, produces = MediaType.APPLICATION_JSON_VALUE)
-//    @ResponseStatus(HttpStatus.OK)
-//    public Page<Operation> get(@PathVariable("uuid") UUID accountId,
-//                               @RequestParam("page") @Min(0) int page,
-//                               @RequestParam("size") @Min(1) int size,
-//                               @RequestParam(value = "from", required = false) LocalDateTime from,
-//                               @RequestParam(value ="to", required = false) LocalDateTime to,
-//                               @RequestParam(value = "cat", required = false) UUID[] categories) {
-//        return operationService.get(accountId, page, size);
-//    }
-
     @GetMapping(value = {"", "/"}, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.OK)
     public Page<Operation> get(@PathVariable("uuid") UUID accountId,

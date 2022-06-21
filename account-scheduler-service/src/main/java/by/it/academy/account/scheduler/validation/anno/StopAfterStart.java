@@ -1,6 +1,6 @@
 package by.it.academy.account.scheduler.validation.anno;
 
-import by.it.academy.account.scheduler.validation.StopAfterStartValidator;
+import by.it.academy.account.scheduler.validation.validator.StopAfterStartValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
