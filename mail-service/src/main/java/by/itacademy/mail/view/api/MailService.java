@@ -2,7 +2,7 @@ package by.itacademy.mail.view.api;
 
 import by.itacademy.mail.model.Mail;
 
-public interface IParamValidator {
+public interface MailService<T> {
 
-    void validate(Mail params);
+    void send(Mail<T> params);
 }
