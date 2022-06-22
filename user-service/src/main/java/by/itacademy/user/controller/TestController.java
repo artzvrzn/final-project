@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/user")
 public class TestController {
 
-    private UserHolder holder;
+    private final UserHolder holder;
 
     public TestController(UserHolder holder) {
         this.holder = holder;

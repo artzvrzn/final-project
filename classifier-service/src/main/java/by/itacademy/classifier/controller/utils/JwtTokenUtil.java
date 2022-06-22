@@ -1,12 +1,10 @@
 package by.itacademy.classifier.controller.utils;
 
 import io.jsonwebtoken.*;
-import lombok.extern.java.Log;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.Collection;

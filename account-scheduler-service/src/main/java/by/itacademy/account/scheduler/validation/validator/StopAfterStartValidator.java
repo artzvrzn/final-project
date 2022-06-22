@@ -21,6 +21,6 @@ public class StopAfterStartValidator implements ConstraintValidator<StopAfterSta
         if (start.isEqual(epochZero) && stop.isEqual(epochZero)) {
             return true;
         }
-        return start.isEqual(stop) ? false : stop.isAfter(start);
+        return !start.isEqual(stop) && stop.isAfter(start);
     }
 }

@@ -1,9 +1,9 @@
 package by.itacademy.account.scheduler.model;
 
-import by.itacademy.account.scheduler.validation.groups.FirstOrder;
-import by.itacademy.account.scheduler.validation.groups.SecondOrder;
 import by.itacademy.account.scheduler.validation.anno.CurrencyBelongsAccount;
 import by.itacademy.account.scheduler.validation.anno.Exist;
+import by.itacademy.account.scheduler.validation.groups.FirstOrder;
+import by.itacademy.account.scheduler.validation.groups.SecondOrder;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;

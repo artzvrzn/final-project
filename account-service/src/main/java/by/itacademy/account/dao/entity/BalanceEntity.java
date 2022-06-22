@@ -2,7 +2,6 @@ package by.itacademy.account.dao.entity;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.Formula;
 
 import javax.persistence.*;
 import java.math.BigDecimal;

@@ -1,0 +1,27 @@
+server:
+  port: 8084
+urls:
+  report-service: http://localhost:8083/
+spring:
+  mail:
+    host: smtp.mail.ru
+    port: 465
+    debug: true
+    username: finance-mail-service@mail.ru
+    password: cDZBJnNefc3FVm3x4j8R
+    properties:
+      mail:
+        from: finance-mail-service@mail.ru
+        transport.protocol: smtp
+        smtp:
+          auth: true
+          starttls.enable: true
+          ssl:
+            protocols: TLSv1.2
+            enable: true
+            trust: smtp.mail.ru
+minio:
+  bucket.name: report
+  access.key: 9Z939G61IPEV0WFHWIW1
+  access.secret: krPc7XIcvXPCGnZpX1BtMnmWr4OaTzXqsH+50Jd6
+  url: http://localhost:93/
