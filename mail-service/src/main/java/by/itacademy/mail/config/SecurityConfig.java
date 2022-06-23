@@ -46,6 +46,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 // Our public endpoints
                 .antMatchers("/public/**").permitAll()
+                .antMatchers("/validate/**").hasAuthority("ROLE_ADMIN")
                 // Our private endpoints
                 .anyRequest().authenticated();
 

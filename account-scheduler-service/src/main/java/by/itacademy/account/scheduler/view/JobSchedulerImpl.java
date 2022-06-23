@@ -52,7 +52,7 @@ public class JobSchedulerImpl implements JobScheduler {
             JobDetail jobDetail = getJobDetail(scheduledOperation);
             Trigger trigger = getTrigger(jobDetail, scheduledOperation.getSchedule());
             scheduler.scheduleJob(jobDetail, trigger);
-            log.info("Operation {} has been updated\n{}",
+            log.info("Operation {} has been updated. {}",
                     scheduledOperation.getId(), getTriggerInfo(trigger));
         } catch (SchedulerException exc) {
             String message = "failure during updating the job: ";

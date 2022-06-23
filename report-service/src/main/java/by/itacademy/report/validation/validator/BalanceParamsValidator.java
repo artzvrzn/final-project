@@ -28,9 +28,6 @@ public class BalanceParamsValidator implements ParamsValidator {
         if (params == null || params.isEmpty()) {
             throw new ValidationException("params is empty");
         }
-        if (params.size() > 1) {
-            throw new ValidationException("Illegal params were passed");
-        }
         List<Violation> violations = new ArrayList<>();
         List<UUID> ids = readAccounts(params, violations);
         if (!violations.isEmpty()) {

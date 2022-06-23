@@ -56,10 +56,14 @@ public class OperationSchedulerServiceImpl implements OperationSchedulerService 
     @Override
     @Transactional(readOnly = true)
     public Page<ScheduledOperation> get(int page, int size) {
-        String username =userService.getUserDetails().getUsername();
+        UserDetails user = userService.getUserDetails();
         Pageable request = PageRequest.of(page, size, Sort.by("created").descending());
-        return repository.findAllByUsername(
-                username, request).map(e -> conversionService.convert(e, ScheduledOperation.class));
+        if (userService.isAdmin(user)) {
+            return repository.findAll(request).map(e -> conversionService.convert(e, ScheduledOperation.class));
+        } else {
+            return repository.findAllByUsername(
+                    user.getUsername(), request).map(e -> conversionService.convert(e, ScheduledOperation.class));
+        }
     }
 
     @Override

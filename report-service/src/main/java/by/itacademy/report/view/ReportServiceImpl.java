@@ -10,10 +10,7 @@ import by.itacademy.report.model.ReportStatus;
 import by.itacademy.report.model.ReportType;
 import by.itacademy.report.utils.MapParser;
 import by.itacademy.report.validation.validator.ParamsValidatorFactory;
-import by.itacademy.report.view.api.StorageService;
-import by.itacademy.report.view.api.ReportExecutor;
-import by.itacademy.report.view.api.ReportService;
-import by.itacademy.report.view.api.UserService;
+import by.itacademy.report.view.api.*;
 import by.itacademy.report.model.FileData;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,7 +38,7 @@ import java.util.stream.Collectors;
 public class ReportServiceImpl implements ReportService {
 
     @Autowired
-    private ParamsValidatorFactory validatorFactory;
+    private ValidationService validationService;
     @Autowired
     private ReportRepository reportRepository;
     @Autowired
@@ -57,10 +54,7 @@ public class ReportServiceImpl implements ReportService {
 
     @Override
     public UUID create(ReportType type, Map<String, Object> params) {
-        List<Violation> violations = validatorFactory.getValidator(type).validate(params);
-        if (!violations.isEmpty()) {
-            throw new ValidationException("Validation failed", violations);
-        }
+        validationService.validate(type, params);
         Report report = createReport(type, params);
         reportRepository.save(conversionService.convert(report, ReportEntity.class));
         log.info("Report {} has been requested for creation", report.getId());

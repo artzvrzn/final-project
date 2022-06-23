@@ -3,7 +3,7 @@ package by.itacademy.mail.view;
 import by.itacademy.mail.model.FileData;
 import by.itacademy.mail.model.Mail;
 import by.itacademy.mail.model.Report;
-import by.itacademy.mail.model.ScheduledMail;
+import by.itacademy.mail.model.QueueMail;
 import by.itacademy.mail.view.api.CommunicatorService;
 import by.itacademy.mail.view.api.ScheduledMailer;
 import by.itacademy.mail.view.api.StorageService;
@@ -26,7 +26,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 @Component
 public class ReportScheduledMailer implements ScheduledMailer<Report> {
 
-    private final Queue<ScheduledMail<Report>> awaiting = new LinkedBlockingQueue<>();
+    private final Queue<QueueMail<Report>> awaiting = new LinkedBlockingQueue<>();
     @Autowired
     private JavaMailSender mailSender;
     @Autowired
@@ -35,15 +35,15 @@ public class ReportScheduledMailer implements ScheduledMailer<Report> {
     private CommunicatorService<Report> communicatorService;
 
     @Override
-    public void addToQueue(ScheduledMail<Report> mail) {
+    public void addToQueue(QueueMail<Report> mail) {
         awaiting.add(mail);
     }
 
-    @Scheduled(fixedRate = 2000L)
+    @Scheduled(fixedRate = 1000)
     private void executeTasks() {
         int size = awaiting.size();
         for (int i = 0; i <= size; i++) {
-            ScheduledMail<Report> qm = awaiting.poll();
+            QueueMail<Report> qm = awaiting.poll();
             if (qm == null) {
                 continue;
             }

@@ -43,9 +43,6 @@ public class ScheduledOperationJob extends QuartzJobBean {
         log.info("Executing job {}", jobKey);
         try {
             sendRequest(operation, userDetails);
-            if (operation.getValue().equals(new BigDecimal(0))) {
-                throw new Exception("test");
-            }
             log.info("Success. Next execution at: {}", context.getTrigger().getNextFireTime());
         } catch (Exception exc) {
             log.error("Error occurred during job {} execution: {}",

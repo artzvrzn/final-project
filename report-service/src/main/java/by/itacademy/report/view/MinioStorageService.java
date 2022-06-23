@@ -26,7 +26,6 @@ public class MinioStorageService implements StorageService {
     private String bucketName;
 
     @Override
-    @Async("SecurityAwareTaskExecutor")
     public void upload(FileData file) {
         try (InputStream inputStream = new ByteArrayInputStream(file.getContent())) {
             log.info("Uploading {} to the storage", file.getFilename());

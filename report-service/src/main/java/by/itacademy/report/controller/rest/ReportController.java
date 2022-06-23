@@ -22,7 +22,7 @@ public class ReportController {
 
     @PostMapping(value = {"/{type}", "/{type}/"}, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> create(@PathVariable("type") ReportType type,
-                                 @RequestBody Map<String, Object> params) {
+                                    @RequestBody Map<String, Object> params) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .header("id", reportService.create(type, params).toString())

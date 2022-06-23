@@ -79,6 +79,7 @@ public class ExceptionAdvice {
 
     @ExceptionHandler(RuntimeException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
     public SingleResponseError exceptionHandler(RuntimeException e) {
         log.error("Error occurred: {}", e.getMessage());
         return new SingleResponseError(SINGLE_ERROR, INVALID_PARAMETERS);

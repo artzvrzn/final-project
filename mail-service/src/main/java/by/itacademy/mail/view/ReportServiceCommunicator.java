@@ -54,19 +54,20 @@ public class ReportServiceCommunicator implements CommunicatorService<Report> {
             }
             return UUID.fromString((String) idList.get(0));
         } catch (HttpStatusCodeException e) {
-            HttpStatus httpStatus = e.getStatusCode();
-            switch (httpStatus) {
-                case FORBIDDEN:
-                    log.info(e.getMessage());
-                    throw new AccessDeniedException("Access forbidden for this user", e);
-                case UNAUTHORIZED:
-                    log.info(e.getMessage());
-                    throw new SecurityException("Unauthorized access", e);
-                default:
-                    ResponseError error = handleResponse(e);
-                    throw new ResponseException(
-                            "Report service has returned an error: " + e.getMessage(), error);
-            }
+            log.error("Post request has returned an error: {}", e.getMessage());
+            throw handleException(e);
+        }
+    }
+
+    public void sendValidationRequest(Report report) {
+        String url = reportServiceUrl + "validate/" + report.getType();
+        try {
+            HttpEntity<Object> httpEntity = new HttpEntity<>(report.getParams(), buildHeaders(userToken()));
+            log.info("Knocking on {} body {}", url, report.getParams());
+            restTemplate.exchange(url, HttpMethod.POST, httpEntity, Void.class);
+        } catch (HttpStatusCodeException e) {
+            log.error("Validation not passed: {}", e.getMessage());
+            throw handleException(e);
         }
     }
 
@@ -89,6 +90,22 @@ public class ReportServiceCommunicator implements CommunicatorService<Report> {
         HttpHeaders headers = new HttpHeaders();
         headers.set(HttpHeaders.AUTHORIZATION, token);
         return headers;
+    }
+
+    private RuntimeException handleException(HttpStatusCodeException e) {
+        HttpStatus httpStatus = e.getStatusCode();
+        switch (httpStatus) {
+            case FORBIDDEN:
+                log.info(e.getMessage());
+                return new AccessDeniedException("Access forbidden for this user", e);
+            case UNAUTHORIZED:
+                log.info(e.getMessage());
+                return new SecurityException("Unauthorized access", e);
+            default:
+                ResponseError error = handleResponse(e);
+                return new ResponseException(
+                        "Report service has returned an error: " + e.getMessage(), error);
+        }
     }
 
     private ResponseError handleResponse(HttpStatusCodeException exception) {

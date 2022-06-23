@@ -23,7 +23,6 @@ import java.util.stream.Collectors;
 @ControllerAdvice
 public class ExceptionAdvice {
 
-
     @ExceptionHandler(ConstraintViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody

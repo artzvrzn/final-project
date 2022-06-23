@@ -9,7 +9,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @AllArgsConstructor
-public class ScheduledMail<T> {
+public class QueueMail<T> {
 
     private UUID id;
     private Mail<T> mail;

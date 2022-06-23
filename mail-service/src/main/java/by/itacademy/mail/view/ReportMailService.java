@@ -2,7 +2,7 @@ package by.itacademy.mail.view;
 
 import by.itacademy.mail.model.Mail;
 import by.itacademy.mail.model.Report;
-import by.itacademy.mail.model.ScheduledMail;
+import by.itacademy.mail.model.QueueMail;
 import by.itacademy.mail.view.api.CommunicatorService;
 import by.itacademy.mail.view.api.MailService;
 import by.itacademy.mail.view.api.ScheduledMailer;
@@ -25,7 +25,7 @@ public class ReportMailService implements MailService<Report> {
     @Override
     public void send(Mail<Report> mail) {
         UUID id = communicatorService.postRequest(mail.getSubject());
-        ScheduledMail<Report> scheduledMail = new ScheduledMail<>(id, mail);
-        scheduledMailer.addToQueue(scheduledMail);
+        QueueMail<Report> queueMail = new QueueMail<>(id, mail);
+        scheduledMailer.addToQueue(queueMail);
     }
 }
