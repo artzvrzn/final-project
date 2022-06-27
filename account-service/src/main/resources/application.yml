@@ -6,7 +6,7 @@ balance-update-rate: 30000
 spring:
   jpa:
     database: POSTGRESQL
-    show-sql: false
+    show-sql: true
     hibernate:
       ddl-auto: none
   datasource:

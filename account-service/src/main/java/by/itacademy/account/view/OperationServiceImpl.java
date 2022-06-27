@@ -61,11 +61,11 @@ public class OperationServiceImpl implements OperationService {
     @Transactional(readOnly = true)
     public Page<Operation> get(UUID accountId, int page, int size, OperationCriteria criteria) {
         checkAuthorization(accountId);
-        Sort sort = Sort.by("date");
+        Sort sort;
         if (criteria.getSort().equals(Sort.Direction.ASC)) {
-            sort.ascending();
+            sort = Sort.by("date").ascending();
         } else {
-            sort.descending();
+            sort = Sort.by("date").descending();
         }
         Pageable pageable = PageRequest.of(page, size, sort);
         UserDetails userDetails = userService.getUserDetails();

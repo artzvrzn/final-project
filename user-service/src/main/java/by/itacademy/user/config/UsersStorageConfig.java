@@ -31,6 +31,16 @@ public class UsersStorageConfig {
                     .password(encoder.encode("123"))
                     .roles("USER")
                     .build();
+            UserDetails user2 = User.builder()
+                    .username("user2")
+                    .password(encoder.encode("123"))
+                    .roles("USER")
+                    .build();
+            UserDetails user3 = User.builder()
+                    .username("user3")
+                    .password(encoder.encode("123"))
+                    .roles("USER")
+                    .build();
             UserDetails admin = User.builder()
                     .username("admin")
                     .password(encoder.encode("321"))
@@ -38,6 +48,8 @@ public class UsersStorageConfig {
                     .build();
 
             manager.createUser(user);
+            manager.createUser(user2);
+            manager.createUser(user3);
             manager.createUser(admin);
         }catch (DuplicateKeyException e){
             //всё  ок, уже есть

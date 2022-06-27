@@ -1,0 +1,22 @@
+server:
+  port: 80
+urls:
+  account-service: http://localhost:8080/account
+  classifier-service: http://localhost:8081/classifier
+  user-service: http://localhost:8090/public/login
+spring:
+  jpa:
+    database: POSTGRESQL
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/telegram-service
+    username: postgres
+    password: 111
+telegram:
+  api-url: https://api.telegram.org/
+  webhook-path: https://c584-37-214-52-202.eu.ngrok.io
+  bot-name: finance_account_bot
+  bot-token: 5568198107:AAFVtQL2_JARIA_ZOXuhPPE9ZEmOYQrfuf8

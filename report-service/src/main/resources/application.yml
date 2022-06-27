@@ -12,7 +12,7 @@ spring:
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/report-service
-    username: report-service_user
+    username: postgres
     password: 111
 minio:
   bucket.name: report
