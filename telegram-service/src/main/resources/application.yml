@@ -16,10 +16,12 @@ spring:
     username: postgres
     password: 111
 jwt:
-  issuer: ITAcademy
-  secret: NDQ1ZjAzNjQtMzViZi00MDRjLTljZjQtNjNjYWIyZTU5ZDYw
+  issuer: ${JWT_ISSUER}
+  secret: ${JWT_SECRET}
+temp-storage:
+  cleaning-rate: 1800000
 telegram:
   api-url: https://api.telegram.org/
-  webhook-path: https://c584-37-214-52-202.eu.ngrok.io
-  bot-name: finance_account_bot
-  bot-token: 5568198107:AAFVtQL2_JARIA_ZOXuhPPE9ZEmOYQrfuf8
+  webhook-path: https://b2e7-37-214-60-58.eu.ngrok.io
+  bot-name: ${TELEGRAM_BOT_NAME}
+  bot-token: ${TELEGRAM_BOT_TOKEN}

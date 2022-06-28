@@ -9,7 +9,7 @@ import java.util.Date;
 @Component
 public class JwtTokenUtil {
 
-    @Value("${jwt.secret")
+    @Value("${jwt.secret}")
     private String jwtSecret;
     @Value("${jwt.issuer}")
     private String jwtIssuer;

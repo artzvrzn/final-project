@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Getter
@@ -24,4 +25,6 @@ public class Operation implements Stateful {
     private UUID currency;
     @JsonIgnore
     private int state;
+    @JsonIgnore
+    private LocalDateTime instantiated = LocalDateTime.now();
 }

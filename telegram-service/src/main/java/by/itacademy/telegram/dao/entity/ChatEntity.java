@@ -17,7 +17,7 @@ import java.util.UUID;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "telegram_chat", schema = "public")
+@Table(name = "telegram_chat", schema = "app")
 public class ChatEntity {
 
     @Id

@@ -45,7 +45,7 @@ public class UpdateAccountMessageHandler implements MessageHandler {
         if (message.getText().equals(ButtonType.SUB_GET_BACK.getText())) {
             stateStorage.delete(chat.getId());
             chatService.updateState(chat.getId(), MenuState.ACCOUNT);
-            return basicReplyMainMenu(chat.getId(), HEADER_ACCOUNT.getText());
+            return basicReplyAccountMenu(chat.getId(), HEADER_ACCOUNT.getText());
         }
         if (message.getText().equals(ButtonType.SUB_START_AGAIN.getText())) {
             stateStorage.delete(chat.getId());
@@ -136,7 +136,7 @@ public class UpdateAccountMessageHandler implements MessageHandler {
         return HandlerUtils.basicReply(chatId, text, keyboardFactory.get(MenuState.ACCOUNT_CREATE));
     }
 
-    private SendMessage basicReplyMainMenu(String chatId, String text) {
-        return HandlerUtils.basicReply(chatId, text, keyboardFactory.get(MenuState.MAIN));
+    private SendMessage basicReplyAccountMenu(String chatId, String text) {
+        return HandlerUtils.basicReply(chatId, text, keyboardFactory.get(MenuState.ACCOUNT));
     }
 }

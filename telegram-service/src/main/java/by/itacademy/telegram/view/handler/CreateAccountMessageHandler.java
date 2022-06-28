@@ -89,10 +89,10 @@ public class CreateAccountMessageHandler implements MessageHandler {
     private void handleAccount(Account account, Message message) {
         String text = message.getText();
         String chatId = message.getChatId().toString();
-        log.info("Account creation: chat id {}, account stage {}, input {}", chatId, account.getState(), text);
         if (ButtonType.contains(text)) {
             return;
         }
+        log.info("Account creation: chat id {}, account stage {}, input {}", chatId, account.getState(), text);
         switch (account.getState()) {
             case 0:
                 account.setTitle(text);

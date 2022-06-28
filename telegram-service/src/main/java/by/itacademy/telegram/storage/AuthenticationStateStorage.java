@@ -18,6 +18,11 @@ public class AuthenticationStateStorage implements StateStorage<Authentication> 
     }
 
     @Override
+    public Map<String, Authentication> getAll() {
+        return Map.copyOf(stateStorageMap);
+    }
+
+    @Override
     public void add(String id, Authentication authentication) {
         stateStorageMap.put(id, authentication);
     }

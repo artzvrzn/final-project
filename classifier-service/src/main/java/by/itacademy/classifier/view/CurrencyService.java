@@ -63,7 +63,7 @@ public class CurrencyService implements ClassifierService<Currency> {
     @Override
     @Transactional(readOnly = true)
     public Page<Currency> get(int page, int size) {
-        Pageable request = PageRequest.of(page, size, Sort.by("created").descending());
+        Pageable request = PageRequest.of(page, size, Sort.by("title").ascending());
         return currencyRepository.findAll(request).map(e -> mapper.map(e, Currency.class));
     }
 

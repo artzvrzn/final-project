@@ -33,8 +33,9 @@ public class MessageHandlers {
             chatService.updateState(chat.getId(), MenuState.AUTH);
             return applicationContext.getBean(AuthenticationHandler.class).handle(message, chat);
         }
-        if (chat.getJwtToken() == null || jwtTokenUtil.isExpired(chat.getJwtToken())) {
+        if (chat.getJwtToken() != null && jwtTokenUtil.isExpired(chat.getJwtToken())) {
             chat.setState(MenuState.AUTH);
+            chat.setJwtToken(null);
             chatService.updateState(chat.getId(), MenuState.AUTH);
             return applicationContext.getBean(AuthenticationHandler.class).handle(message, chat);
         }

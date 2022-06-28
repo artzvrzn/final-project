@@ -61,7 +61,7 @@ public class CategoryService implements ClassifierService<Category> {
 
     @Override
     public Page<Category> get(int page, int size) {
-        Pageable request = PageRequest.of(page, size, Sort.by("created").descending());
+        Pageable request = PageRequest.of(page, size, Sort.by("title").ascending());
         return categoryRepository.findAll(request).map(e -> mapper.map(e, Category.class));
     }
 

@@ -5,6 +5,8 @@ import com.google.common.base.Objects;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 public class Authentication implements Stateful {
@@ -13,6 +15,8 @@ public class Authentication implements Stateful {
     private String password;
     @JsonIgnore
     private int state;
+    @JsonIgnore
+    private LocalDateTime instantiated = LocalDateTime.now();
 
     @Override
     public boolean equals(Object o) {

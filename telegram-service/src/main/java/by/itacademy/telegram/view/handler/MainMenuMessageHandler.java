@@ -66,11 +66,12 @@ public class MainMenuMessageHandler implements MessageHandler {
         StringBuilder sb = new StringBuilder();
         for (Account account: accounts) {
             sb.append('\n');
-            sb.append("id: ").append(account.getUuid()).append('\n');
-            sb.append("название: ").append(account.getTitle()).append('\n');
-            sb.append("описание: ").append(account.getDescription()).append('\n');
+            sb.append("Id: ").append(account.getUuid()).append('\n');
+            sb.append("Название: ").append(account.getTitle()).append('\n');
+            sb.append("Описание: ").append(account.getDescription()).append('\n');
+            sb.append("Тип: ").append(account.getType()).append('\n');
             Currency currency = communicatorService.getCurrency(account.getCurrency(), chatId);
-            sb.append("валюта: ").append(currency.getTitle());
+            sb.append("Валюта: ").append(currency.getTitle());
             sb.append('\n');
         }
         return basicReply(chatId, sb.toString());

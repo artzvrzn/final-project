@@ -17,7 +17,7 @@ public class OperationInlineKeyboard  {
             for (Operation operation : operations) {
                 rowList.add(
                         getButton(
-                                operation.getDate() + " " + operation.getDescription(),
+                                String.format("%s %s %s", operation.getDate(), operation.getDescription(), operation.getValue()),
                                 CallbackData.OPERATION_ + operation.getUuid().toString()));
             }
         }

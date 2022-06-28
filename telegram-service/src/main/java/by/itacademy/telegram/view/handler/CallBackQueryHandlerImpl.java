@@ -2,6 +2,7 @@ package by.itacademy.telegram.view.handler;
 
 import by.itacademy.telegram.model.constant.CallbackData;
 import by.itacademy.telegram.model.constant.MenuState;
+import by.itacademy.telegram.model.constant.Reply;
 import by.itacademy.telegram.view.api.ChatService;
 import by.itacademy.telegram.view.handler.api.CallBackQueryHandler;
 import by.itacademy.telegram.view.keyboard.KeyboardFactory;
@@ -28,13 +29,13 @@ public class CallBackQueryHandlerImpl implements CallBackQueryHandler {
         if (data.startsWith(CallbackData.ACCOUNT_.name())) {
             String id = data.replaceAll(".+_", "");
             chatService.updateAccount(chatId, UUID.fromString(id));
-            SendMessage sendMessage = new SendMessage(chatId, "Вы выбрали аккаунт " + id);
+            SendMessage sendMessage = new SendMessage(chatId, Reply.ACCOUNT_CHOICE_MADE.getText());
             sendMessage.setReplyMarkup(keyboardFactory.get(MenuState.ACCOUNT).get());
             return sendMessage;
         }
         if (data.startsWith(CallbackData.OPERATION_.name())) {
             String id = data.replaceAll(".+_", "");
-            SendMessage sendMessage = new SendMessage(chatId, "Вы выбрали операцию " + id);
+            SendMessage sendMessage = new SendMessage(chatId, Reply.OPERATION_CHOICE_MADE.getText());
             chatService.updateOperation(chatId, UUID.fromString(id));
             sendMessage.setReplyMarkup(keyboardFactory.get(MenuState.OPERATION).get());
             return sendMessage;

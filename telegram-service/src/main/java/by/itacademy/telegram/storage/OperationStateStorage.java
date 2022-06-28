@@ -19,6 +19,11 @@ public class OperationStateStorage implements StateStorage<Operation> {
     }
 
     @Override
+    public Map<String, Operation> getAll() {
+        return Map.copyOf(stateStorageMap);
+    }
+
+    @Override
     public void add(String chatId, Operation operation) {
         stateStorageMap.put(chatId, operation);
     }

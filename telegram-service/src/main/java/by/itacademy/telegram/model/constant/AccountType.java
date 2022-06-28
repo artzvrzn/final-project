@@ -24,7 +24,7 @@ public enum AccountType {
     public static String getAvailableTypes() {
         return Arrays
                 .stream(AccountType.values())
-                .filter(e -> e.equals(INVALID))
+                .filter(e -> !(e.equals(INVALID)))
                 .map(AccountType::name)
                 .collect(Collectors.joining("\n"));
     }

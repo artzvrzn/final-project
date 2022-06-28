@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Getter
@@ -27,6 +28,8 @@ public class Account implements Stateful {
     private UUID currency;
     @JsonIgnore
     private int state;
+    @JsonIgnore
+    private LocalDateTime instantiated = LocalDateTime.now();
 
     @Override
     public boolean equals(Object o) {
@@ -52,5 +55,21 @@ public class Account implements Stateful {
                 ", type='" + type + '\'' +
                 ", currency=" + currency +
                 '}';
+    }
+
+    public boolean isValid() {
+        if (state == 1) {
+            return title != null;
+        }
+        if (state == 2) {
+            return title != null && description != null;
+        }
+        if (state == 3) {
+            return title != null && description != null && type != null;
+        }
+        if (state == 4) {
+            return title != null && description != null && type != null && currency != null;
+        }
+        return true;
     }
 }
