@@ -80,7 +80,7 @@ paths:
           $ref: '#/components/responses/Forbidden'
         '500':
           $ref: '#/components/responses/Internal_Server_Error'
-  /api/v1/report/{uuid}/export:
+  /api/v1/account/{uuid}/export:
     get:
       tags:
         - "Отчёты"

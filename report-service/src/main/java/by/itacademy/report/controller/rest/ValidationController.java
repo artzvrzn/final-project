@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/validate/")
+@RequestMapping("/report/validate/")
 public class ValidationController {
 
     @Autowired

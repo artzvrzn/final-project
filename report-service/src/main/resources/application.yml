@@ -1,21 +1,18 @@
-server:
-  port: 8083
 urls:
-  account-service: http://localhost:8080/account
-  classifier-service: http://localhost:8081/classifier
+  account-service: http://account-service:8080/account
+  classifier-service: http://classifier-service:8080/classifier
 spring:
   jpa:
     database: POSTGRESQL
-    show-sql: true
     hibernate:
       ddl-auto: none
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/report-service
-    username: postgres
-    password: 111
+    url: jdbc:postgresql://db:5432/report-service
+    username: root
+    password: root
 minio:
   bucket.name: report
   access.key: 9Z939G61IPEV0WFHWIW1
   access.secret: krPc7XIcvXPCGnZpX1BtMnmWr4OaTzXqsH+50Jd6
-  url: http://localhost:93/
+  url: http://minio:9000/

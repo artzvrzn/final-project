@@ -1,10 +1,8 @@
-CREATE USER "account-scheduler-service_user" WITH PASSWORD '111';
-CREATE DATABASE "account-scheduler-service" WITH OWNER = "account-scheduler-service_user";
-\c "account-scheduler-service"
+CREATE USER "mail-scheduler-service_user" WITH PASSWORD '111';
+CREATE DATABASE "mail-scheduler-service" WITH OWNER = "mail-scheduler-service_user";
+\c "mail-scheduler-service"
 
 SET client_encoding = 'UTF8';
-
-BEGIN;
 
 DROP TABLE IF EXISTS quartz.QRTZ_FIRED_TRIGGERS CASCADE;
 DROP TABLE IF EXISTS quartz.QRTZ_PAUSED_TRIGGER_GRPS CASCADE;
@@ -21,8 +19,6 @@ DROP TABLE IF EXISTS quartz.QRTZ_CALENDARS CASCADE;
 DROP SCHEMA IF EXISTS quartz;
 
 CREATE SCHEMA quartz;
-
-ALTER SCHEMA quartz OWNER TO "account-scheduler-service_user";
 
 CREATE TABLE quartz.QRTZ_JOB_DETAILS
 (
@@ -213,33 +209,27 @@ CREATE INDEX IDX_QRTZ_FT_TG
   ON quartz.QRTZ_FIRED_TRIGGERS (SCHED_NAME, TRIGGER_GROUP);
 
 
-DROP TABLE IF EXISTS app.scheduled_operations;
-
-DROP SCHEMA IF EXISTS app;
+DROP SCHEMA IF EXISTS app CASCADE;
 
 CREATE SCHEMA app;
 
-ALTER SCHEMA app OWNER TO "account-scheduler-service_user";
+DROP TABLE IF EXISTS app.scheduled_mail_reports;
 
-CREATE TABLE IF NOT EXISTS app.scheduled_operations
+CREATE TABLE IF NOT EXISTS app.scheduled_mail_reports
 (
     id uuid NOT NULL,
-    account uuid NOT NULL,
-    category uuid NOT NULL,
     created timestamp(3) without time zone NOT NULL,
-    currency uuid NOT NULL,
-    description character varying(255) NOT NULL,
     "interval" integer NOT NULL,
+    params character varying NOT NULL,
+    receiver character varying(255) NOT NULL,
     start_time timestamp(3) without time zone NOT NULL,
     stop_time timestamp(3) without time zone NOT NULL,
     time_unit integer NOT NULL,
+    type character varying(255) NOT NULL,
     updated timestamp(3) without time zone NOT NULL,
     username character varying(255) NOT NULL,
-    value numeric(19,2) NOT NULL,
-    CONSTRAINT scheduled_operations_pkey PRIMARY KEY (id)
+    CONSTRAINT scheduled_mail_reports_pkey PRIMARY KEY (id)
 );
 
-ALTER TABLE IF EXISTS app.scheduled_operations
-    OWNER to "account-scheduler-service_user";
-
-COMMIT;
+ALTER TABLE IF EXISTS app.scheduled_mail_reports
+    OWNER to "mail-scheduler-service_user";

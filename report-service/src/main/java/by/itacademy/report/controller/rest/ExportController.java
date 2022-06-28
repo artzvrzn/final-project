@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/account/{uuid}/export")
+@RequestMapping("/report/{uuid}/export")
 public class ExportController {
 
     @Autowired

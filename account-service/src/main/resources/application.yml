@@ -1,20 +1,11 @@
-server:
-  port: 8080
 urls:
-  classifier-service: http://localhost:8081/classifier
-balance-update-rate: 30000
+  classifier-service: http://classifier-service:8080/classifier
+balance-update-rate: 10000
 spring:
   jpa:
     database: POSTGRESQL
-    show-sql: true
-    hibernate:
-      ddl-auto: none
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/account-service
-    username: postgres
-    password: 111
-  mvc:
-    view:
-      prefix: /views/
-      suffix: .jsp
+    url: jdbc:postgresql://db:5432/account-service
+    username: root
+    password: root

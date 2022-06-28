@@ -1,9 +1,7 @@
-server:
-  port: 8085
 urls:
-  account-service: http://localhost:8080/account
-  classifier-service: http://localhost:8081/classifier
-  mail-service: http://localhost:8084/mail
+  account-service: http://account-service:8080/account
+  classifier-service: http://classifier-service:8080/classifier
+  mail-service: http://mail-service:8080/mail
 spring:
   jpa:
     database: POSTGRESQL
@@ -11,9 +9,9 @@ spring:
       ddl-auto: none
   datasource:
     driver-class-name: org.postgresql.Driver
-    jdbc-url: jdbc:postgresql://localhost:5432/mail-scheduler-service
-    username: postgres
-    password: 111
+    jdbc-url: jdbc:postgresql://db:5432/mail-scheduler-service
+    username: root
+    password: root
   quartz:
     job-store-type: jdbc
     overwrite-existing-jobs: true

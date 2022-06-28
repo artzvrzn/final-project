@@ -44,7 +44,7 @@ public class ReportServiceCommunicator implements CommunicatorService<Report> {
 
     @Override
     public UUID postRequest(Report report) {
-        String url = reportServiceUrl + "report/" + report.getType();
+        String url = reportServiceUrl + "/" + report.getType();
         try {
             ResponseEntity<?> responseEntity = postReport(url, report.getParams());
             HttpHeaders headers = responseEntity.getHeaders();
@@ -60,7 +60,7 @@ public class ReportServiceCommunicator implements CommunicatorService<Report> {
     }
 
     public void sendValidationRequest(Report report) {
-        String url = reportServiceUrl + "validate/" + report.getType();
+        String url = reportServiceUrl + "/validate/" + report.getType();
         try {
             HttpEntity<Object> httpEntity = new HttpEntity<>(report.getParams(), buildHeaders(userToken()));
             log.info("Knocking on {} body {}", url, report.getParams());
@@ -73,7 +73,7 @@ public class ReportServiceCommunicator implements CommunicatorService<Report> {
 
     @Override
     public boolean isAvailable(UUID id) {
-        String url = reportServiceUrl + "account/" + id + "/export";
+        String url = reportServiceUrl + "/" + id + "/export";
         HttpEntity<Object> httpEntity = new HttpEntity<>(buildHeaders(serviceToken()));
         log.info("Knocking on {}: ", url);
         ResponseEntity<Void> request = restTemplate.exchange(url, HttpMethod.HEAD, httpEntity, Void.class);

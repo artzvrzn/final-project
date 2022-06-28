@@ -1,9 +1,9 @@
 server:
-  port: 80
+  port: 85
 urls:
-  account-service: http://localhost:8080/account
-  classifier-service: http://localhost:8081/classifier
-  user-service: http://localhost:8090/public/login
+  account-service: http://account-service:8080/account
+  classifier-service: http://classifier-service:8080/classifier
+  user-service: http://user-service:8080/user/login
 spring:
   jpa:
     database: POSTGRESQL
@@ -12,9 +12,9 @@ spring:
       ddl-auto: none
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/telegram-service
-    username: postgres
-    password: 111
+    url: jdbc:postgresql://db:5432/telegram-service
+    username: root
+    password: root
 jwt:
   issuer: ${JWT_ISSUER}
   secret: ${JWT_SECRET}
@@ -22,6 +22,9 @@ temp-storage:
   cleaning-rate: 1800000
 telegram:
   api-url: https://api.telegram.org/
-  webhook-path: https://b2e7-37-214-60-58.eu.ngrok.io
+  webhook-path: ${TELEGRAM_WEBHOOK_PATH}
   bot-name: ${TELEGRAM_BOT_NAME}
   bot-token: ${TELEGRAM_BOT_TOKEN}
+logging:
+  file:
+    telegram.log

@@ -1,0 +1,134 @@
+version: '3.5'
+services:
+  minio:
+    build: minio
+    image: finance_minio:1.0.0
+    command: server --console-address ":9001" /finance_data
+    environment:
+      MINIO_ROOT_USER: 9Z939G61IPEV0WFHWIW1
+      MINIO_ROOT_PASSWORD: krPc7XIcvXPCGnZpX1BtMnmWr4OaTzXqsH+50Jd6
+    ports:
+      - "93:9000"
+      - "94:9001"
+    networks:
+      - finance_ntwrk
+  db:
+    build: postgresql
+    image: finance_postgresql:1.0.0
+    restart: always
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+    ports:
+      - "5432:5432"
+    networks:
+      - finance_ntwrk
+  pgadmin:
+    build: pgadmin
+    image: finance_pgadmin:1.0.0
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: root
+    ports:
+      - "82:80"
+    networks:
+      - finance_ntwrk
+  swagger-ui:
+    build: swagger-ui
+    image: finance_swagger-ui:1.0.0
+    ports:
+      - "81:8080"
+    networks:
+      - finance_ntwrk
+  account-scheduler-service:
+    build: account-scheduler-service
+    image: finance_account-scheduler-service:1.0.0
+    networks:
+      - finance_ntwrk
+    depends_on:
+      - db
+      - classifier-service
+      - account-service
+  account-service:
+    build: account-service
+    image: finance_account-service:1.0.0
+    networks:
+      - finance_ntwrk
+    depends_on:
+      - db
+      - classifier-service
+  user-service:
+    build: user-service
+    image: finance_user-service:1.0.0
+    networks:
+      - finance_ntwrk
+    depends_on:
+      - db
+  classifier-service:
+    build: classifier-service
+    image: finance_classifier-service:1.0.0
+    networks:
+      - finance_ntwrk
+    depends_on:
+      - db
+  report-service:
+    build: report-service
+    image: finance_report-service:1.0.0
+    networks:
+      - finance_ntwrk
+    depends_on:
+      - db
+      - classifier-service
+      - account-service
+  telegram-service:
+    build: telegram-service
+    image: finance_telegram-service:1.0.0
+    environment:
+      TELEGRAM_BOT_NAME:
+      TELEGRAM_BOT_TOKEN:
+      TELEGRAM_WEBHOOK_PATH: telegram:85
+      JWT_ISSUER: ITAcademy
+      JWT_SECRET: NDQ1ZjAzNjQtMzViZi00MDRjLTljZjQtNjNjYWIyZTU5ZDYw
+    ports:
+      - "85:85"
+    networks:
+      - finance_ntwrk
+    depends_on:
+      - db
+      - classifier-service
+      - account-service
+  mail-scheduler-service:
+    build: mail-scheduler-service
+    image: finance_mail-scheduler-service:1.0.0
+    networks:
+      - finance_ntwrk
+    depends_on:
+      - db
+      - mail-service
+  mail-service:
+    build: mail-service
+    image: finance_mail-service:1.0.0
+    networks:
+      - finance_ntwrk
+    depends_on:
+      - db
+      - report-service
+  proxy:
+    build: proxy
+    image: finance_proxy:1.0.0
+    ports:
+      - "80:80"
+    networks:
+      - finance_ntwrk
+    depends_on:
+      - user-service
+      - classifier-service
+      - account-service
+      - account-scheduler-service
+      - report-service
+      - mail-service
+      - mail-scheduler-service
+networks:
+    finance_ntwrk:
+      name: finance_ntwrk

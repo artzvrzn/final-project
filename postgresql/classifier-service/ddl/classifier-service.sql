@@ -17,8 +17,8 @@ CREATE TABLE IF NOT EXISTS app.currency
     id uuid NOT NULL,
     created timestamp without time zone NOT NULL,
     updated timestamp without time zone NOT NULL,
-    description character varying(255) COLLATE pg_catalog."default" NOT NULL,
-    title character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    description character varying(255) NOT NULL,
+    title character varying(255) NOT NULL,
     CONSTRAINT pk_currency PRIMARY KEY (id),
     CONSTRAINT uk_currency_title UNIQUE (title)
 );
@@ -26,13 +26,13 @@ CREATE TABLE IF NOT EXISTS app.currency
 ALTER TABLE IF EXISTS app.currency
     OWNER to "classifier-service_user";
 
-INSERT INTO app.currency(id, created, updated, description, title)
+INSERT INTO app.currency(id, created, updated, title, description)
 VALUES
-    (gen_random_uuid(), now(), now(), "USD", "Доллар США"),
-    (gen_random_uuid(), now(), now(), "EUR", "Евро"),
-    (gen_random_uuid(), now(), now(), "UAH", "Гривна"),
-    (gen_random_uuid(), now(), now(), "RUB", "Российский Рубль"),
-    (gen_random_uuid(), now(), now(), "BYN", "Белорусский Рубль");
+    (gen_random_uuid(), now(), now(), 'USD', 'Доллар США'),
+    (gen_random_uuid(), now(), now(), 'EUR', 'Евро'),
+    (gen_random_uuid(), now(), now(), 'UAH', 'Гривна'),
+    (gen_random_uuid(), now(), now(), 'RUB', 'Российский Рубль'),
+    (gen_random_uuid(), now(), now(), 'BYN', 'Белорусский Рубль');
 
 DROP TABLE IF EXISTS app.category;
 
@@ -41,7 +41,7 @@ CREATE TABLE IF NOT EXISTS app.category
     id uuid NOT NULL,
     created timestamp without time zone NOT NULL,
     updated timestamp without time zone NOT NULL,
-    title character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    title character varying(255) NOT NULL,
     CONSTRAINT pk_category PRIMARY KEY (id),
     CONSTRAINT uk_category_title UNIQUE (title)
 );

@@ -4,7 +4,6 @@ CREATE DATABASE "account-scheduler-service" WITH OWNER = "account-scheduler-serv
 
 SET client_encoding = 'UTF8';
 
-BEGIN;
 
 DROP TABLE IF EXISTS quartz.QRTZ_FIRED_TRIGGERS CASCADE;
 DROP TABLE IF EXISTS quartz.QRTZ_PAUSED_TRIGGER_GRPS CASCADE;
@@ -241,5 +240,3 @@ CREATE TABLE IF NOT EXISTS app.scheduled_operations
 
 ALTER TABLE IF EXISTS app.scheduled_operations
     OWNER to "account-scheduler-service_user";
-
-COMMIT;

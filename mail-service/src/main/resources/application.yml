@@ -1,12 +1,10 @@
-server:
-  port: 8084
 urls:
-  report-service: http://localhost:8083/
+  report-service: http://report-service:8080/report
 spring:
   mail:
     host: smtp.mail.ru
     port: 465
-    debug: true
+    debug: false
     username: finance-mail-service@mail.ru
     password: cDZBJnNefc3FVm3x4j8R
     properties:
@@ -24,4 +22,4 @@ minio:
   bucket.name: report
   access.key: 9Z939G61IPEV0WFHWIW1
   access.secret: krPc7XIcvXPCGnZpX1BtMnmWr4OaTzXqsH+50Jd6
-  url: http://localhost:93/
+  url: http://minio:9000/

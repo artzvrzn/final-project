@@ -14,13 +14,13 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/scheduler/mail/report")
+@RequestMapping("/scheduler/mail")
 public class ReportSchedulerController {
 
     @Autowired
     private MailSchedulerService mailSchedulerService;
 
-    @PostMapping(value = {"", "/"}, consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = {"/report", "/report/"}, consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.CREATED)
     public void create(@RequestBody @Valid ScheduledMail scheduledMail) {
         mailSchedulerService.create(scheduledMail);

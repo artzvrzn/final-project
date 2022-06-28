@@ -18,27 +18,20 @@ servers:
         default: "8080"
 
 tags:
-  - name: "Отчёты"
-    description: "Построение отчётов по счетам и операциям"
+  - name: "Справочники"
+    description: "Справочники для хранения системных классификаторов"
 
 paths:
-  /api/v1/report/{type}:
+  /api/v1/classifier/сurrency:
     post:
       tags:
-        - "Отчёты"
-      summary: "Добавление нового отчёта"
-      parameters:
-        - in: path
-          name: type
-          description: "Тип отчёта"
-          required: true
-          schema:
-            $ref: '#/components/schemas/ReportType'
+        - "Справочники"
+      summary: Добавление новой валюты
       requestBody:
-        $ref: "#/components/requestBodies/CreateReport"
+        $ref: "#/components/requestBodies/CreateCurrency"
       responses:
         '201':
-          description: Отчёт запущен
+          description: Валюта добавлена в справочник
         '400':
           $ref: '#/components/responses/Bad_Request'
         '401':
@@ -47,31 +40,17 @@ paths:
           $ref: '#/components/responses/Forbidden'
         '500':
           $ref: '#/components/responses/Internal_Server_Error'
-  /api/v1/report:
     get:
       tags:
-        - "Отчёты"
-      summary: "Получить страницу отчётов"
-      parameters:
-        - in: query
-          name: page
-          schema:
-            type: integer
-          description: Номер страницы
-          required: false
-        - in: query
-          name: size
-          schema:
-            type: integer
-          description: Размер страницы
-          required: false
+        - "Справочники"
+      summary: Получить страницу валют
       responses:
         '200':
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PageOfReport'
+                $ref: '#/components/schemas/PageOfCurrency'
         '400':
           $ref: '#/components/responses/Bad_Request'
         '401':
@@ -80,41 +59,36 @@ paths:
           $ref: '#/components/responses/Forbidden'
         '500':
           $ref: '#/components/responses/Internal_Server_Error'
-  /api/v1/report/{uuid}/export:
+
+  /api/v1/classifier/operation/category:
+    post:
+      tags:
+        - "Справочники"
+      summary: Добавление новой категории операции
+      requestBody:
+        $ref: "#/components/requestBodies/CreateOperationCategory"
+      responses:
+        '201':
+          description: Категория добавлена в справочник
+        '400':
+          $ref: '#/components/responses/Bad_Request'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/Internal_Server_Error'
     get:
       tags:
-        - "Отчёты"
-      summary: Скачать сформированный отчёт
-      parameters:
-        - in: path
-          name: uuid
-          description: Идентификатор отчёта
-          schema:
-            type: string
-            format: uuid
-          required: true
+        - "Справочники"
+      summary: Получить страницу категорий
       responses:
         '200':
           description: OK
           content:
-            text/plain:
+            application/json:
               schema:
-                type: string
-                format: binary
-                description: Файл
-          headers:
-            Content-Disposition:
-              schema:
-                type: string
-                description: Описание файла
-                example: 'attachment; filename="f43b1a97-dc00-40e2-9450-ace8d2416f3d"'
-            Content-Type:
-              schema:
-                type: string
-                description: Описание типа контента
-                example: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-        '204':
-          description: Сервер, по предоставленному uuid, не смог найти информацию
+                $ref: '#/components/schemas/PageOfOperationCategory'
         '400':
           $ref: '#/components/responses/Bad_Request'
         '401':
@@ -123,45 +97,23 @@ paths:
           $ref: '#/components/responses/Forbidden'
         '500':
           $ref: '#/components/responses/Internal_Server_Error'
-    head:
-      tags:
-        - "Отчёты"
-      summary: Проверка доступности сформированного отчёта
-      parameters:
-        - in: path
-          name: uuid
-          description: Идентификатор отчёта
-          schema:
-            type: string
-            format: uuid
-          required: true
-      responses:
-        '200':
-          description: OK
-        '204':
-          description: Сервер, по предоставленному uuid, не смог найти информацию
-        '400':
-          $ref: '#/components/responses/Bad_Request'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/Internal_Server_Error'
-
 
 components:
   requestBodies:
-    CreateReport:
-      description: Параметры для создания отчёта
+    CreateCurrency:
+      description: Тело для валюты
       required: true
       content:
         application/json:
           schema:
-            oneOf:
-              - $ref: '#/components/schemas/ReportParamBalance'
-              - $ref: '#/components/schemas/ReportParamByDate'
-              - $ref: '#/components/schemas/ReportParamByCategory'
+            $ref: '#/components/schemas/Currency'
+    CreateOperationCategory:
+      description: Тело для создания категории операции
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/OperationCategory'
 
   responses:
     Bad_Request:
@@ -201,122 +153,49 @@ components:
             - logref: error
               message:  Сервер не смог корректно обработать запрос. Пожалуйста обратитесь к администратору
   schemas:
-    Report:
-      type: object
-      description: Отчёт
-      required:
-        - description
+    Currency:
+      description: Валюта
       allOf:
         - $ref: '#/components/schemas/t_base_essence'
       properties:
-        status:
+        title:
           type: string
-          description: |
-            Статус отчёта:
-              * `LOADED` - Ожидает формирования
-              * `PROGRESS` - Формирует
-              * `ERROR` - Ошибка формирование
-              * `DONE` - Сформирован
-          enum:
-            - LOADED
-            - PROGRESS
-            - ERROR
-            - DONE
-        type:
-          $ref: '#/components/schemas/ReportType'
-        description:
-          type: string
-          description: "Описание параметров отчёта в человеческом формате"
-          readOnly: true
-          example: "Дата совершения операции: 01.01.2021 - 01.01.2022"
-        params:
-          oneOf:
-            - $ref: '#/components/schemas/ReportParamBalance'
-            - $ref: '#/components/schemas/ReportParamByDate'
-            - $ref: '#/components/schemas/ReportParamByCategory'
+          description: "Название"
+          example: "USD"
 
-    ReportType:
-      type: string
-      description: |
-        Тип отчёта:
-          * `BALANCE` - Остатки по счетам
-          * `BY_DATE` - Выписка со счёта в разрезе дат
-          * `BY_CATEGORY` - Выписка со счёта в разрезе категории
-      enum:
-        - BALANCE
-        - BY_DATE
-        - BY_CATEGORY
 
-    ReportParamBalance:
+    OperationCategory:
       type: object
-      description: Параметры запуска отчёта о балансе
+      description: Категория операции
+      allOf:
+        - $ref: '#/components/schemas/t_base_essence'
       properties:
-        accounts:
-          type: array
-          description: Аккаунты
-          items:
-            type: string
-            format: uuid
+        title:
+          type: string
+          description: "Название"
+          example: "Автомобиль"
 
-    ReportParamByDate:
+    PageOfCurrency:
       type: object
-      description: Параметры запуска отчёта в разрезе даты операции
-      properties:
-        accounts:
-          type: array
-          description: Аккаунты
-          items:
-            type: string
-            format: uuid
-        from:
-          description: Операции начиная с даты
-          type: string
-          format: date
-        to:
-          description: Операции заканчивая датой
-          type: string
-          format: date
-        categories:
-          type: array
-          description: Категории
-          items:
-            type: string
-            format: uuid
-    ReportParamByCategory:
-      type: object
-      description: Параметры запуска отчёта в разрезе категорий
-      properties:
-        accounts:
-          type: array
-          description: Аккаунты
-          items:
-            type: string
-            format: uuid
-        from:
-          description: Операции начиная с даты
-          type: string
-          format: date
-        to:
-          description: Операции заканчивая датой
-          type: string
-          format: date
-        categories:
-          type: array
-          description: Категории
-          items:
-            type: string
-            format: uuid
-
-    PageOfReport:
-      type: object
-      description: Отчёты
+      description: Категории
       allOf:
         - $ref: '#/components/schemas/t_page'
       properties:
         content:
           type: array
           items:
-            $ref: '#/components/schemas/Report'
+            $ref: '#/components/schemas/Currency'
+
+    PageOfOperationCategory:
+      type: object
+      description: Категории
+      allOf:
+        - $ref: '#/components/schemas/t_page'
+      properties:
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/OperationCategory'
 
     t_base_essence:
       type: object
