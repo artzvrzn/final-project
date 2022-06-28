@@ -25,6 +25,7 @@ import java.math.BigDecimal;
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.UUID;
 
 import static by.itacademy.telegram.model.constant.Reply.*;
 
@@ -51,18 +52,19 @@ public class UpdateOperationMessageHandler implements MessageHandler {
         if (input.equals(ButtonType.SUB_GET_BACK.getText())) {
             stateStorage.delete(chatId);
             chatService.updateState(chatId, MenuState.OPERATION);
-            return basicReplyNewState(chatId, HEADER_OPERATION.getText(), MenuState.OPERATION);
+            return basicReplyAccountMenu(chatId, HEADER_OPERATION.getText());
         }
         if (input.equals(ButtonType.SUB_START_AGAIN.getText())) {
             stateStorage.delete(chatId);
             bot.sendMessage(basicReply(chatId, NEW_ATTEMPT.getText()));
-            return basicReply(chatId, OPERATION_DATE.getText());
+            return basicReply(chatId, OPERATION_UPDATE_DATE.getText());
         }
-        Operation operation = stateStorage.get(chatId);
+        Operation operation = stateStorage.get(chat.getId());
         if (operation == null) {
-            operation = new Operation();
+            UUID operationId = chat.getChosenOperation();
+            operation = communicatorService.getOperation(operationId, chat.getId());
             operation.setState(0);
-            stateStorage.add(chatId, operation);
+            stateStorage.add(chat.getId(), operation);
         }
         handleOperation(operation, message, chat);
         generateReply(operation, chatId);
@@ -72,17 +74,17 @@ public class UpdateOperationMessageHandler implements MessageHandler {
     private void generateReply(Operation operation, String chatId) {
         switch (operation.getState()) {
             case 0:
-                bot.sendMessage(basicReply(chatId, OPERATION_DATE.getText()));
+                bot.sendMessage(basicReply(chatId, OPERATION_UPDATE_DATE.getText()));
                 break;
             case 1:
-                bot.sendMessage(basicReply(chatId, OPERATION_DESCRIPTION.getText()));
+                bot.sendMessage(basicReply(chatId, OPERATION_UPDATE_DESCRIPTION.getText()));
                 break;
             case 2:
-                bot.sendMessage(basicReply(chatId, OPERATION_CATEGORY.getText()));
-                bot.sendMessage(basicReply(chatId, getCategories(chatId)));
+                bot.sendMessage(basicReply(chatId, OPERATION_UPDATE_CATEGORY.getText()));
+                bot.sendMessage(basicReply(chatId, HandlerUtils.getAvailableCategories(communicatorService, chatId)));
                 break;
             case 3:
-                bot.sendMessage(basicReply(chatId, OPERATION_VALUE.getText()));
+                bot.sendMessage(basicReply(chatId, OPERATION_UPDATE_VALUE.getText()));
                 break;
             default:
         }
@@ -101,7 +103,7 @@ public class UpdateOperationMessageHandler implements MessageHandler {
                 setDate(operation, input, chat);
                 break;
             case 1:
-                operation.setDescription(input);
+                if (!isSlash(input)) operation.setDescription(input);
                 operation.setState(2);
                 break;
             case 2:
@@ -123,6 +125,10 @@ public class UpdateOperationMessageHandler implements MessageHandler {
     }
 
     private void setDate(Operation operation, String input, Chat chat) {
+        if (isSlash(input)) {
+            operation.setState(1);
+            return;
+        }
         LocalDate date;
         try {
             date = LocalDate.parse(input, DateTimeFormatterUtil.getUniversalDateFormatter());
@@ -136,6 +142,10 @@ public class UpdateOperationMessageHandler implements MessageHandler {
     }
 
     private void setCategory(Operation operation, String input, Chat chat) {
+        if (isSlash(input)) {
+            operation.setState(3);
+            return;
+        }
         Category category = communicatorService.getCategory(input, chat.getId());
         if (category == null) {
             log.error("chat id {}, input {}, wrong category", chat.getId(), input);
@@ -147,15 +157,17 @@ public class UpdateOperationMessageHandler implements MessageHandler {
     }
 
     private void setValue(Operation operation, String input, Chat chat) {
-        BigDecimal value;
-        try {
-            value = new BigDecimal(input);
-        } catch (NumberFormatException e) {
-            log.error("chat id {}, input {}, exception {}", chat.getId(), input, e.getMessage());
-            bot.sendMessage(basicReply(chat.getId(), OPERATION_WRONG_VALUE.getText()));
-            return;
+        if (!isSlash(input)) {
+            BigDecimal value;
+            try {
+                value = new BigDecimal(input);
+            } catch (NumberFormatException e) {
+                log.error("chat id {}, input {}, exception {}", chat.getId(), input, e.getMessage());
+                bot.sendMessage(basicReply(chat.getId(), OPERATION_WRONG_VALUE.getText()));
+                return;
+            }
+            operation.setValue(value);
         }
-        operation.setValue(value);
         try {
             Account account = communicatorService.getAccount(chat.getChosenAccount(), chat.getId());
             if (account == null) {
@@ -175,27 +187,15 @@ public class UpdateOperationMessageHandler implements MessageHandler {
         }
     }
 
-    private String getCategories(String chatId) {
-        List<Category> categories = communicatorService.getCategories(chatId);
-        if (categories == null) {
-            return null;
-        }
-        StringBuilder sb = new StringBuilder();
-        for (Category category: categories) {
-            sb.append(category.getTitle()).append('\n');
-        }
-        return sb.toString();
+    private boolean isSlash(String text) {
+        return text.equals("/");
     }
 
-    private SendMessage basicReplyNewState(String chatId, String text, MenuState state) {
-        SendMessage message = new SendMessage(chatId, text);
-        message.setReplyMarkup(keyboardFactory.get(state).get());
-        return message;
+    private SendMessage basicReplyAccountMenu(String chatId, String text) {
+        return HandlerUtils.basicReply(chatId, text, keyboardFactory.get(MenuState.OPERATION));
     }
 
     private SendMessage basicReply(String chatId, String text) {
-        SendMessage message = new SendMessage(chatId, text);
-        message.setReplyMarkup(keyboardFactory.get(MenuState.OPERATION_CREATE).get());
-        return message;
+        return HandlerUtils.basicReply(chatId, text, keyboardFactory.get(MenuState.OPERATION_UPDATE));
     }
 }

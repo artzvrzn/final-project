@@ -1,6 +1,6 @@
 package by.itacademy.telegram.bot;
 
-import by.itacademy.telegram.view.handler.MessageHandlerFactory;
+import by.itacademy.telegram.view.handler.MessageHandlers;
 import by.itacademy.telegram.view.handler.api.CallBackQueryHandler;
 import lombok.extern.log4j.Log4j2;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
@@ -17,7 +17,7 @@ import static by.itacademy.telegram.model.constant.Reply.EXCEPTION;
 @Log4j2
 public class FinanceTelegramBot extends SpringWebhookBot {
 
-    private final MessageHandlerFactory messageHandlerFactory;
+    private final MessageHandlers messageHandlers;
     private final CallBackQueryHandler callbackQueryHandler;
     private String botPath;
     private String botName;
@@ -25,10 +25,10 @@ public class FinanceTelegramBot extends SpringWebhookBot {
 
 
     public FinanceTelegramBot(SetWebhook setWebhook,
-                              MessageHandlerFactory messageHandlerFactory,
+                              MessageHandlers messageHandlers,
                               CallBackQueryHandler callbackQueryHandler) {
         super(setWebhook);
-        this.messageHandlerFactory = messageHandlerFactory;
+        this.messageHandlers = messageHandlers;
         this.callbackQueryHandler = callbackQueryHandler;
     }
 
@@ -84,7 +84,7 @@ public class FinanceTelegramBot extends SpringWebhookBot {
         } else {
             Message message = update.getMessage();
             if (message != null) {
-                return messageHandlerFactory.delegate(message);
+                return messageHandlers.handle(message);
             }
         }
         return null;

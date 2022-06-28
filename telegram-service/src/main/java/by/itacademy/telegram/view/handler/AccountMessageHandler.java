@@ -34,7 +34,7 @@ public class AccountMessageHandler implements MessageHandler {
     @Autowired
     private KeyboardFactory keyboardFactory;
     @Autowired
-    private MessageHandlerFactory factory;
+    private MessageHandlers factory;
     @Autowired
     private CommunicatorService communicatorService;
 
@@ -49,7 +49,7 @@ public class AccountMessageHandler implements MessageHandler {
         if (input.equals(ButtonType.ACCOUNT_UPDATE_ACCOUNT.getText())) {
             chatService.updateState(chatId, MenuState.ACCOUNT_UPDATE);
             bot.sendMessage(basicReplyNewState(chatId, HEADER_ACCOUNT_UPDATE.getText(), MenuState.ACCOUNT_UPDATE));
-            return factory.delegate(message);
+            return factory.handle(message);
         }
         if (input.equals(ButtonType.ACCOUNT_GET_BALANCE.getText())) {
             return getBalance(chat);
@@ -57,7 +57,7 @@ public class AccountMessageHandler implements MessageHandler {
         if (input.equals(ButtonType.ACCOUNT_CREATE_OPERATION.getText())) {
             chatService.updateState(chatId, MenuState.OPERATION_CREATE);
             bot.sendMessage(basicReplyNewState(chatId, HEADER_OPERATION_CREATE.getText(), MenuState.OPERATION_CREATE));
-            return factory.delegate(message);
+            return factory.handle(message);
         }
         if (input.equals(ButtonType.ACCOUNT_CHOOSE_OPERATION.getText())) {
             return chooseReply(chatId);
@@ -170,20 +170,15 @@ public class AccountMessageHandler implements MessageHandler {
     }
 
     private SendMessage basicReply(String chatId, String text) {
-        SendMessage message = new SendMessage(chatId, text);
-        message.setReplyMarkup(keyboardFactory.get(MenuState.ACCOUNT).get());
-        return message;
+        return HandlerUtils.basicReply(chatId, text, keyboardFactory.get(MenuState.ACCOUNT));
+    }
+    private SendMessage basicReplyNewState(String chatId, String text, MenuState state) {
+        return HandlerUtils.basicReply(chatId, text, keyboardFactory.get(state));
     }
 
     private SendMessage inlineKeyboardReply(String chatId, List<List<Operation>> partitionedOperations) {
         SendMessage message = new SendMessage(chatId, OPERATION_CHOICE.getText());
         message.setReplyMarkup(new OperationInlineKeyboard().get(partitionedOperations));
-        return message;
-    }
-
-    private SendMessage basicReplyNewState(String chatId, String text, MenuState state) {
-        SendMessage message = new SendMessage(chatId, text);
-        message.setReplyMarkup(keyboardFactory.get(state).get());
         return message;
     }
 }

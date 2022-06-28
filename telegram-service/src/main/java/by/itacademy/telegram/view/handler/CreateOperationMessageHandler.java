@@ -21,7 +21,6 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import java.math.BigDecimal;
 import java.time.DateTimeException;
 import java.time.LocalDate;
-import java.util.List;
 
 import static by.itacademy.telegram.model.constant.Reply.*;
 
@@ -48,7 +47,7 @@ public class CreateOperationMessageHandler implements MessageHandler {
         if (input.equals(ButtonType.SUB_GET_BACK.getText())) {
             stateStorage.delete(chatId);
             chatService.updateState(chatId, MenuState.ACCOUNT);
-            return basicReplyNewState(chatId, HEADER_ACCOUNT.getText(), MenuState.ACCOUNT);
+            return basicReplyAccountMenu(chatId, HEADER_ACCOUNT.getText());
         }
         if (input.equals(ButtonType.SUB_START_AGAIN.getText())) {
             stateStorage.delete(chatId);
@@ -76,7 +75,7 @@ public class CreateOperationMessageHandler implements MessageHandler {
                 break;
             case 2:
                 bot.sendMessage(basicReply(chatId, OPERATION_CATEGORY.getText()));
-                bot.sendMessage(basicReply(chatId, getCategories(chatId)));
+                bot.sendMessage(basicReply(chatId, HandlerUtils.getAvailableCategories(communicatorService, chatId)));
                 break;
             case 3:
                 bot.sendMessage(basicReply(chatId, OPERATION_VALUE.getText()));
@@ -85,7 +84,6 @@ public class CreateOperationMessageHandler implements MessageHandler {
         }
     }
 
-    //TODO set local date
     private void handleOperation(Operation operation, Message message, Chat chat) {
         String input = message.getText();
         String chatId = chat.getId();
@@ -173,27 +171,11 @@ public class CreateOperationMessageHandler implements MessageHandler {
         }
     }
 
-    private String getCategories(String chatId) {
-        List<Category> categories = communicatorService.getCategories(chatId);
-        if (categories == null) {
-            return null;
-        }
-        StringBuilder sb = new StringBuilder();
-        for (Category category: categories) {
-            sb.append(category.getTitle()).append('\n');
-        }
-        return sb.toString();
-    }
-
-    private SendMessage basicReplyNewState(String chatId, String text, MenuState state) {
-        SendMessage message = new SendMessage(chatId, text);
-        message.setReplyMarkup(keyboardFactory.get(state).get());
-        return message;
+    private SendMessage basicReplyAccountMenu(String chatId, String text) {
+        return HandlerUtils.basicReply(chatId, text, keyboardFactory.get(MenuState.ACCOUNT));
     }
 
     private SendMessage basicReply(String chatId, String text) {
-        SendMessage message = new SendMessage(chatId, text);
-        message.setReplyMarkup(keyboardFactory.get(MenuState.OPERATION_CREATE).get());
-        return message;
+        return HandlerUtils.basicReply(chatId, text, keyboardFactory.get(MenuState.OPERATION_CREATE));
     }
 }

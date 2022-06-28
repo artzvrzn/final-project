@@ -1,7 +1,7 @@
 package by.itacademy.telegram.config;
 
 import by.itacademy.telegram.bot.FinanceTelegramBot;
-import by.itacademy.telegram.view.handler.MessageHandlerFactory;
+import by.itacademy.telegram.view.handler.MessageHandlers;
 import by.itacademy.telegram.view.handler.api.CallBackQueryHandler;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -27,9 +27,9 @@ public class TelegramConfig {
 
     @Bean
     public FinanceTelegramBot financeTelegramBot(SetWebhook setWebhook,
-                                                 MessageHandlerFactory messageHandlerFactory,
+                                                 MessageHandlers messageHandlers,
                                                  CallBackQueryHandler callBackQueryHandler) {
-        FinanceTelegramBot financeBot = new FinanceTelegramBot(setWebhook, messageHandlerFactory, callBackQueryHandler);
+        FinanceTelegramBot financeBot = new FinanceTelegramBot(setWebhook, messageHandlers, callBackQueryHandler);
         financeBot.setBotPath(webhookPath);
         financeBot.setBotName(botName);
         financeBot.setBotToken(botToken);

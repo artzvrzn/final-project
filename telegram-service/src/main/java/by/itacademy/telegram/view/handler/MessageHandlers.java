@@ -2,6 +2,7 @@ package by.itacademy.telegram.view.handler;
 
 import by.itacademy.telegram.model.constant.MenuState;
 import by.itacademy.telegram.model.Chat;
+import by.itacademy.telegram.utils.JwtTokenUtil;
 import by.itacademy.telegram.view.api.ChatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -10,14 +11,16 @@ import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.objects.Message;
 
 @Component
-public class MessageHandlerFactory {
+public class MessageHandlers {
 
     @Autowired
     private ChatService chatService;
     @Autowired
     private ApplicationContext applicationContext;
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
 
-    public BotApiMethod<?> delegate(Message message) {
+    public BotApiMethod<?> handle(Message message) {
         Chat chat = chatService.get(message);
         if (chat == null) {
             chat = new Chat();
@@ -26,6 +29,11 @@ public class MessageHandlerFactory {
             chatService.create(chat);
         }
         if (message.getText().equals("/start")) {
+            chat.setState(MenuState.AUTH);
+            chatService.updateState(chat.getId(), MenuState.AUTH);
+            return applicationContext.getBean(AuthenticationHandler.class).handle(message, chat);
+        }
+        if (chat.getJwtToken() == null || jwtTokenUtil.isExpired(chat.getJwtToken())) {
             chat.setState(MenuState.AUTH);
             chatService.updateState(chat.getId(), MenuState.AUTH);
             return applicationContext.getBean(AuthenticationHandler.class).handle(message, chat);

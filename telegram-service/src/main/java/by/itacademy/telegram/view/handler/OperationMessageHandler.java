@@ -9,18 +9,14 @@ import by.itacademy.telegram.view.api.ChatService;
 import by.itacademy.telegram.view.api.CommunicatorService;
 import by.itacademy.telegram.view.handler.api.MessageHandler;
 import by.itacademy.telegram.view.keyboard.KeyboardFactory;
-import by.itacademy.telegram.view.keyboard.OperationInlineKeyboard;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.HttpStatusCodeException;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 
 import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.UUID;
 
 import static by.itacademy.telegram.model.constant.Reply.*;
 
@@ -37,7 +33,7 @@ public class OperationMessageHandler implements MessageHandler {
     @Autowired
     private KeyboardFactory keyboardFactory;
     @Autowired
-    private MessageHandlerFactory factory;
+    private MessageHandlers factory;
     @Autowired
     private CommunicatorService communicatorService;
 
@@ -53,7 +49,7 @@ public class OperationMessageHandler implements MessageHandler {
         if (input.equals(ButtonType.OPERATION_UPDATE.getText())) {
             chatService.updateState(chatId, MenuState.OPERATION_UPDATE);
             bot.sendMessage(basicReplyNewState(chatId, HEADER_OPERATION_UPDATE.getText(), MenuState.OPERATION_UPDATE));
-            return factory.delegate(message);
+            return factory.handle(message);
         }
         if (input.equals(ButtonType.OPERATION_DELETE.getText())) {
             return deleteOperation(chat);

@@ -33,6 +33,8 @@ public interface CommunicatorService {
 
     Currency getCurrency(String title, String chatId) throws HttpStatusCodeException;
 
+    List<Currency> getCurrencies(String chatId);
+
     Category getCategory(UUID id, String chatId) throws HttpStatusCodeException;
 
     Category getCategory(String title, String chatId) throws HttpStatusCodeException;

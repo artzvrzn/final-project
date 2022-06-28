@@ -30,10 +30,16 @@ public enum Reply {
     ACCOUNT_UPDATE_FAILED("Не удалось обновить аккаунт"),
     ACCOUNT_CHOICE("Выберите аккаунт"),
     OPERATION_DATE("Введите дату операции"),
+    OPERATION_UPDATE_DATE("Введите дату операции (\"/\" чтобы оставить прежнюю)"),
     OPERATION_DESCRIPTION("Введите описании операции"),
+    OPERATION_UPDATE_DESCRIPTION("Введите описании операции (\"/\" чтобы оставить прежнее)"),
     OPERATION_CATEGORY("Выберите подходящую категорию из предложенных"),
+    OPERATION_UPDATE_CATEGORY("Выберите подходящую категорию из предложенных (\"/\" чтобы оставить прежнюю)"),
+
     OPERATION_WRONG_CATEGORY("Неверно указана категория"),
     OPERATION_VALUE("Введите сумму операции"),
+    OPERATION_UPDATE_VALUE("Введите сумму операции (\"/\" чтобы оставить прежнюю)"),
+
     OPERATION_WRONG_VALUE("Неверно указана сумма операции"),
     OPERATION_SUCCESS("Операция успешно добавлена!"),
     OPERATION_FAILED("Не удалось добавить операцию"),

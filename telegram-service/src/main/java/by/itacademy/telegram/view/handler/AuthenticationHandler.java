@@ -70,7 +70,7 @@ public class AuthenticationHandler implements MessageHandler {
                     chat.setState(MenuState.MAIN);
                     chat.setJwtToken(token);
                     chatService.update(chatId, chat);
-                    bot.sendMessage(basicReplyNewState(chatId, Reply.AUTH_SUCCESS.getText(), MenuState.MAIN));
+                    bot.sendMessage(basicReplyMainMenu(chatId, Reply.AUTH_SUCCESS.getText()));
                     stateStorage.delete(chatId);
                     break;
                 } catch (SecurityException exc) {
@@ -97,10 +97,8 @@ public class AuthenticationHandler implements MessageHandler {
         }
     }
 
-    private SendMessage basicReplyNewState(String chatId, String text, MenuState state) {
-        SendMessage message = new SendMessage(chatId, text);
-        message.setReplyMarkup(keyboardFactory.get(state).get());
-        return message;
+    private SendMessage basicReplyMainMenu(String chatId, String text) {
+        return HandlerUtils.basicReply(chatId, text, keyboardFactory.get(MenuState.MAIN));
     }
 
     private SendMessage basicReply(String chatId, String text) {

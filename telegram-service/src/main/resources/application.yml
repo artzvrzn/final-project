@@ -15,6 +15,9 @@ spring:
     url: jdbc:postgresql://localhost:5432/telegram-service
     username: postgres
     password: 111
+jwt:
+  issuer: ITAcademy
+  secret: NDQ1ZjAzNjQtMzViZi00MDRjLTljZjQtNjNjYWIyZTU5ZDYw
 telegram:
   api-url: https://api.telegram.org/
   webhook-path: https://c584-37-214-52-202.eu.ngrok.io

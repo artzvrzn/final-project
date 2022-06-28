@@ -175,6 +175,15 @@ public class CommunicatorServiceImpl implements CommunicatorService {
     }
 
     @Override
+    public List<Currency> getCurrencies(String chatId) {
+        UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromUriString(classifierServiceUrl)
+                .path("/currency")
+                .queryParam("page", 0)
+                .queryParam("size", 100);
+        return getElements(uriBuilder, chatId, new ParameterizedTypeReference<RestPage<Currency>>() {});
+    }
+
+    @Override
     public Category getCategory(UUID id, String chatId) throws HttpStatusCodeException {
         String url = classifierServiceUrl + "/operation/category/" + id;
         return getRequest(url, chatId, Category.class);

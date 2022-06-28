@@ -1,7 +1,9 @@
 package by.itacademy.telegram.model.constant;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 public enum AccountType {
 
@@ -17,5 +19,13 @@ public enum AccountType {
         } catch (IllegalArgumentException e) {
             return INVALID;
         }
+    }
+
+    public static String getAvailableTypes() {
+        return Arrays
+                .stream(AccountType.values())
+                .filter(e -> e.equals(INVALID))
+                .map(AccountType::name)
+                .collect(Collectors.joining("\n"));
     }
 }

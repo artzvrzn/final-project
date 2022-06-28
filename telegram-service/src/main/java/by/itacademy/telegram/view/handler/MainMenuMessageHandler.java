@@ -33,7 +33,7 @@ public class MainMenuMessageHandler implements MessageHandler {
     @Autowired
     private KeyboardFactory keyboardFactory;
     @Autowired
-    private MessageHandlerFactory handlerFactory;
+    private MessageHandlers handlerFactory;
     @Autowired
     private FinanceTelegramBot bot;
     @Autowired
@@ -47,7 +47,7 @@ public class MainMenuMessageHandler implements MessageHandler {
         if (input.equals(ButtonType.MAIN_CREATE_ACCOUNT.getText())) {
             chatService.updateState(chat.getId(), MenuState.ACCOUNT_CREATE);
             bot.sendMessage(basicReplyNewState(chatId, Reply.HEADER_ACCOUNT_CREATE.getText(), MenuState.ACCOUNT_CREATE));
-            return handlerFactory.delegate(message);
+            return handlerFactory.handle(message);
         }
         if (input.equals(ButtonType.MAIN_GET_ACCOUNTS.getText())) {
             return getAccounts(chatId);
