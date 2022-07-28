@@ -13,4 +13,4 @@
 </p>
 <p>The application has been packaged with Docker and has been deployed to the remote server.</p>
 <hr>
-<p><b>Tech stack</b>: Java 11, Jakarta EE, Spring Framework (Boot, Data JPA, MVC, Data JPA), PostgreSQL, Quartz, Apache POI, MinIO, Docker, Swagger.</p>
+<p><b>Tech stack</b>: Java 11, Spring Framework (Boot, Data JPA, MVC, Data JPA), PostgreSQL, Quartz, Apache POI, MinIO, Docker, Swagger.</p>
